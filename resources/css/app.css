@@ -1,0 +1,40 @@
+h1,h2,h3,p,span,button,label {
+    font-family: var(--ft-family);
+}
+
+h1 {
+    font-size: 28px;
+}
+
+h2 {
+    font-size: 18px;
+}
+
+
+
+
+/* エラーメッセージ */
+.err_msg {
+    color: red;
+}
+
+
+
+/* 変数 */
+
+:root {
+    /* ヘッダー高さ */
+    --header-height: 70px;
+
+    /* サイドバーの幅 */
+    --side-menu-width: 256px;
+
+    /* ホバー時等アクティブカラー */
+    --active-color: #00b7ee;
+
+    /* ダークカラー */
+    --dark-color: #333;
+
+    /* フォントファミリー */
+    --ft-family: 'Times New Roman', Times, serif;
+}
