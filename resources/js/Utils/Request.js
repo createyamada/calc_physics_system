@@ -9,10 +9,11 @@ import { saveAs } from 'file-saver';
  * @param {*} speed 
  * @returns 
  */
-const calcParabolicMotion = (angle = "", speed="") => {
+const calcParabolicMotion = (angle = "", speed="" , step="") => {
     const params = {
         angle: angle,
-        speed: speed
+        speed: speed,
+        step: step,
     };
 
     return get('api/calcParabolicMotion' , params);
