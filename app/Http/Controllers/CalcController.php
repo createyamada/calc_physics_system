@@ -20,13 +20,12 @@ class CalcController extends Controller
 
         $angle = (Float)$request->angle;
         $speed = (Float)$request->speed;
-        $step = (Double)$request->step;
+        $step = !isset($request->step) ? 1 : (Float)$request->step;
 
         // 運動方程式を利用して放物線のデータを求める
         try {
             $equation = new Equation();
             $result = $equation->equationOfMotion($angle , $speed , $step);
-            // $result = $equation->equationOfMotion($angle , $speed );
         } catch(Throwable $e) {
             \Log::error($e);
             throw Exception($e); 

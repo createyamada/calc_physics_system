@@ -9,13 +9,12 @@ class Equation
      * 運動方程式メソッド
      * @param Float $angle
      * @param Float $speed
-     * @param Double $incremental
+     * @param Float $step
      * @return Object $result
      */
-    public function equationOfMotion(Float $angle , Float $speed , $step=1): Object
+    public function equationOfMotion(Float $angle , Float $speed , Float $step=1): Object
     {
 
-        // ini_set('memory_limit', '1000000000000M');
         // 計算結果配列
         $result = (Object)[
             'xSpeed' => [],
@@ -23,13 +22,8 @@ class Equation
             'position' => [],
         ];
 
-        // TODO:debug
-        // $angle = 45;
-        // $speed = 50;
+        // 求める桁数
         $digit = 3;
-        // $step =1;
-        \Log::debug($step);
-        // TODO:debug
 
         // 重力加速度
         $gravitationalAcceleration = 9.8;
