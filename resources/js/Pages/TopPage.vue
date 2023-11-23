@@ -13,7 +13,6 @@
 
 <script setup>
     import { useRouter } from 'vue-router';
-    import CustomButton from '@/Components/CustomButton.vue';
 
     const router = useRouter();
 
