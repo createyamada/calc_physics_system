@@ -72,13 +72,7 @@
     const updateChart = async() => {
         try {
             const res = await Request.calcParabolicMotion(angleRef.value,speedRef.value,stepRef.value);
-            // const datas = res.data.position;
             chartDataRef.value = res.data.position;
-            // for(let i=0;i<datas.length;i++) {
-            //     console.log(datas[i])
-            //     chartDataRef.value.push(datas[i]);
-            //     sleep(5000);    
-            // }
 
         } catch (err) {
             console.log(err.message);

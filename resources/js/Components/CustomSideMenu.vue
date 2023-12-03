@@ -24,7 +24,10 @@
 // const
 // サイドメニュー表示内容
 const CONTENTS = [
-    {'path': '/parabolicMotion' , 'label':'放物運動計算'}
+    {'path': '/parabolicMotion' , 'label':'放物運動計算'},
+    {'path': '/artificialSatellitePage' , 'label':'人口衛星シミュレーション'},
+
+    
 ];
 
 

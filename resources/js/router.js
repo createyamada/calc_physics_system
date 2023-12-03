@@ -2,6 +2,7 @@ import { createRouter , createWebHistory } from 'vue-router';
 import MainPage from '@/Pages/MainPage.vue';
 import TopPage from '@/Pages/TopPage.vue';
 import ParabolicMotionPage from '@/Pages/ParabolicMotionPage.vue';
+import ArtificialSatellitePage from '@/Pages/ArtificialSatellitePage.vue';
 
 const routes = [
 
@@ -29,6 +30,14 @@ const routes = [
                 component: ParabolicMotionPage,
                 meta :{
                     title: '放物運動計算',
+                }
+            },
+            {
+                path: '/ArtificialSatellitePage',
+                name: 'ArtificialSatellitePage',
+                component: ArtificialSatellitePage,
+                meta :{
+                    title: '人口衛星シミュレーション',
                 }
             }
         ]  
