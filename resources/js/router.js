@@ -2,7 +2,7 @@ import { createRouter , createWebHistory } from 'vue-router';
 import MainPage from '@/Pages/MainPage.vue';
 import TopPage from '@/Pages/TopPage.vue';
 import ParabolicMotionPage from '@/Pages/ParabolicMotionPage.vue';
-import ArtificialSatellitePage from '@/Pages/ArtificialSatellitePage.vue';
+import ArtificialSatelliteMotionPage from '@/Pages/ArtificialSatelliteMotionPage.vue';
 
 const routes = [
 
@@ -33,9 +33,9 @@ const routes = [
                 }
             },
             {
-                path: '/ArtificialSatellitePage',
-                name: 'ArtificialSatellitePage',
-                component: ArtificialSatellitePage,
+                path: '/ArtificialSatelliteMotionPage',
+                name: 'ArtificialSatelliteMotionPage',
+                component: ArtificialSatelliteMotionPage,
                 meta :{
                     title: '人口衛星シミュレーション',
                 }
