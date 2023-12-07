@@ -42,12 +42,12 @@
     .btn,
     a.btn,
     button.btn {
-      font-size: 1.6rem;
+      font-size: 20px;
       font-weight: 700;
       line-height: 1.5;
       position: relative;
       display: inline-block;
-      padding: 1rem 4rem;
+      padding: 3px 7px;
       cursor: pointer;
       -webkit-user-select: none;
       -moz-user-select: none;
@@ -66,7 +66,7 @@
     a.btn-flat {
       overflow: hidden;
     
-      padding: 1.5rem 6rem;
+      padding: 10px 45px;
     
       color: #fff;
       border-radius: 0;

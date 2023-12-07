@@ -22,13 +22,15 @@ class PlanetClass {
     }
     // 惑星描画
     draw(ctx) {
-      ctx.save();
-      ctx.fillStyle = "#25A8FF";
-      ctx.beginPath();
-      ctx.arc(0, 0, this.r / this.scale, 0, Math.PI * 2);
-      ctx.fill();
-  
-      ctx.restore();
+      // TODO:なんか使えない
+      // ctx.save();
+
+      // ctx.fillStyle = '#25A8FF'; // 塗り色を青に
+      // ctx.beginPath();
+      // ctx.arc(0, 0, this.r / this.scale, 0, Math.PI * 2); // 中心に円を描く
+      // ctx.fill();
+
+      // ctx.restore();
     }
     // 第一宇宙速度を求める
     get firstCosmicVelocity() {
@@ -36,11 +38,11 @@ class PlanetClass {
     }
     // 第二宇宙速度を求める
     get SecondCosmicVelocity() {
-      return Math.sqrt(2*this.g+r);
+      return Math.sqrt(2*this.g+this.r);
     }
-    // 惑星重力を計算
+    // 重力加速度を計算
     get g() {
-      return Const.G * ( this.m / this.r * this.r )
+      return (Const.G * this.m) / this.r ** 2;
     }
   }
 

@@ -2,20 +2,23 @@
     <div class="container">
         <label>{{ label }} ：</label>
         <input class="text_box" type="text"
-         v-model="textValueRef"
+        :v-model="value"
+        :value="value"
         :name="name"
+        :disabled="disableFlag"
         :placeholder="placeholder" 
         @input="textChange">
     </div>
 </template>
 
 <script setup>
-    import { ref } from 'vue';
+    import { ref , watch } from 'vue';
  
     // props
     const props = defineProps({
         name: String,
         placeholder: String,
+        disableFlag: Boolean,
         label: String,
         value: String,
     });
@@ -27,7 +30,7 @@
     ]);
 
     // テキスト入力値
-    const textValueRef = ref(props.value);
+    // const textValueRef = ref(props.value);
 
     const textChange = ($e) => {
         console.log($e)
@@ -35,6 +38,11 @@
         
         emit('input' , textValueRef.value);
     }
+
+    watch(props.value, () => {
+        console.log('ここ来ています？')
+        textValueRef.value = props.value;
+    })
 </script>'
 
 <style scoped>
