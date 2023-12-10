@@ -5,7 +5,7 @@
         <CustomInput :name="'angle'" :label="'角度'" :value="angleRef" :placeholder="'1~90の数値で入力'" @input="angleRef = $event"/>
         <CustomInput :name="'speed'" :label="'速度'" :value="speedRef" :placeholder="'1以上の数値で入力'" @input="speedRef = $event"/>
         <CustomInput :name="'step'" :label="'計測間隔(秒)'" :value="stepRef" :placeholder="'0より大きい数値で入力'" @input="stepRef = $event"/>
-        <CustomButton :label="'計算開始'" @click="calcStart" />
+        <CustomSubmitButton :label="'計算開始'" @click="calcStart" />
     </div>
 
 
@@ -25,7 +25,7 @@
     import Request from '@/Utils/Request';
     import LineGraph from '@/Components/Graphs/LineGraph.vue';
     import CustomInput from '@/Components/CustomInput.vue';
-    import CustomButton from '@/Components/CustomButton.vue';
+    import CustomSubmitButton from '@/Components/CustomSubmitButton.vue';
     import ErrorModal from '@/Components/ErrorModal.vue';
     import Common from '@/Utils/Common';
 

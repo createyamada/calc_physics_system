@@ -35,6 +35,9 @@ h2 {
     /* ダークカラー */
     --dark-color: #333;
 
+    /* 枠、キャンセルカラー */
+    --flame-cancel-color: #6C676E;
+
     /* フォントファミリー */
     --ft-family: 'Times New Roman', Times, serif;
 }

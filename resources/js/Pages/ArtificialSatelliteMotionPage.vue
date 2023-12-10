@@ -1,41 +1,48 @@
 <template>
   <div class="container">
-    <div class="up_contents">
-      <div class="planet_select">
-        <select v-model="selectValueRef" :disable="inputFlagRef" @change="selectChange">
-          <option v-for="planet in Const.PLANET_INFO" :key="key" :value="planet.i"> {{ planet.name }}</option>
-        </select>
+    <div class="config_contents">
+      <div class="input_contents">
+        <div class="planet_select">
+          <CustomSelectBox  :disableFlag="inputDisableFlagRef" @change="selectChange"/>
+        </div >
+        <div class="textbox_input">
+          <CustomInput :name="'height'" :label="'打ち上げ高度(km)'" v-model="heightRef" :placeholder="'正の整数で入力'" :disableFlag="inputDisableFlagRef" @input="heightRef = $event" />
+          <CustomInput v-if="inputResetFlagRef" :name="'speed'" :label="'初速度(km/s)'" v-model="speedRef" :placeholder="'正の整数で入力'" :disableFlag="inputDisableFlagRef" @input="speedRef = $event" />
+          <CustomInput v-if="inputResetFlagRef" :name="'mass'" :label="'惑星質量(kg)'" v-model="massRef" :placeholder="'正の整数で入力'" :disableFlag="inputDisableFlagRef" @input="massRef = $event" />
+          <CustomInput v-if="inputResetFlagRef" :name="'radius'" :label="'惑星半径(km)'" v-model="radiusRef" :placeholder="'正の整数で入力'" :disableFlag="inputDisableFlagRef" @input="radiusRef = $event" />
+          <CustomInput v-if="inputResetFlagRef" :name="'scale'" :label="'スケール(1km/px)'" v-model="scaleRef" :disableFlag="inputDisableFlagRef" :placeholder="'正の整数で入力'" @input="scaleRef = $event"/>
+        </div>
+      </div>
+  
+      <div class="btn_contents">
+        <CustomSubmitButton :label="'計算開始'" @click="calcStart" />
+        <CustomCancelButton :label="'クリア'" @click="calcStop" />
+      </div>
+
+    </div>
+
+    <div class="main_contents">
+      <div v-if="infoResetFlagRef" class="control_content">
+        <p v-if="infoResetFlagRef">X成分速度:{{ xSpeedRef }}</p>
+        <p v-if="infoResetFlagRef">Y成分速度:{{ ySpeedRef }}</p>
+        <p v-if="infoResetFlagRef">X成分位置:{{ xPositionRef }}</p>
+        <p v-if="infoResetFlagRef">Y成分位置:{{ yPositionRef }}</p>
+        <p v-if="infoResetFlagRef">仮想日付:{{ dateRef }}</p>
       </div>
       <div>
-        <CustomButton :label="'計算開始'" @click="calcStart" />
-        <CustomButton :label="'クリア'" @click="calcStop" />
+        <canvas v-show="canvasFlagRef" id="canvas" width="640" height="500"></canvas>
       </div>
-
     </div>
 
-    <div class="down_contents">
-      <CustomInput :name="'height'" :label="'打ち上げ高度(km)'" :v-model="heightRef" :value="heightRef" :placeholder="'正の整数で入力'" :disableFlag="inputFlagRef" @input="heightRef = $event" />
-      <CustomInput :name="'speed'" :label="'初速度(km/s)'" :value="speedRef" :placeholder="'正の整数で入力'" :disableFlag="inputFlagRef" @input="speedRef = $event" />
-      <CustomInput :name="'mass'" :label="'惑星質量(kg)'" :v-model="massRef" :value="massRef" :placeholder="'正の整数で入力'" :disableFlag="inputFlagRef" @input="massRef = $event" />
-      <CustomInput :name="'radius'" :label="'惑星半径(km)'" :v-model="radiusRef" :value="radiusRef" :placeholder="'正の整数で入力'" :disableFlag="inputFlagRef" @input="radiusRef = $event" />
-      <CustomInput :name="'radius'" :label="'スケール(1km/px)'" :value="scaleRef" :disableFlag="inputFlagRef" :placeholder="'正の整数で入力'" />
-    </div>
 
-    <div class="control_content">
-      <p>X成分速度:{{ xSpeedRef }}</p>
-      <p>Y成分速度:{{ ySpeedRef }}</p>
-      <p>X成分位置:{{ xPositionRef }}</p>
-      <p>Y成分位置:{{ yPositionRef }}</p>
-      <p>仮想日付:{{ dateRef }}</p>
-    <canvas :v-show="canvasFlagRef"  id="canvas" width="640" height="800"></canvas>
-
-    </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
-import CustomButton from '@/Components/CustomButton.vue';
+import { onMounted, ref , nextTick } from 'vue';
+import CustomSubmitButton from '@/Components/CustomSubmitButton.vue';
+import CustomCancelButton from '@/Components/CustomCancelButton.vue';
+import CustomSelectBox from '@/Components/CustomSelectBox.vue';
 import CustomInput from '@/Components/CustomInput.vue';
 import Common from '@/Utils/Common';
 import Const from '@/Utils/Const';
@@ -71,19 +78,28 @@ const gravityCoefficientRef = ref(Number(Const.G) * Number(massRef.value));
 // 日付
 const dateRef = ref(0);
 // スケール
-const scaleRef = ref(30);
+const scaleRef = ref(50);
 // 惑星セレクトボックス
 const selectValueRef = ref(0);
 // キャンバス描画フラグ
 const canvasFlagRef = ref(false);
+// インプットリセットフラグ
+const inputResetFlagRef = ref(true);
 // インプット活性非活性フラグ
-const inputFlagRef = ref(false);
+const inputDisableFlagRef = ref(false);
+// 情報リセットフラグ
+const infoResetFlagRef = ref(true);
 
 // セレクトボックスチェンジ
 const selectChange = async(event) => {
-  console.log(Const.PLANET_INFO?.[event.target.value].name)
-  massRef.value = Const.PLANET_INFO?.[event.target.value].m;
-  radiusRef.value = Const.PLANET_INFO?.[event.target.value].r;
+  console.log('event');
+  console.log(event);
+  massRef.value = Const.PLANET_INFO?.[event].m;
+  radiusRef.value = Const.PLANET_INFO?.[event].r;
+  inputResetFlagRef.value = false;
+  await nextTick()
+  inputResetFlagRef.value = true;
+    
 }
 
 
@@ -93,7 +109,7 @@ const calcStart = async () => {
   // キャンバス描画
   canvasFlagRef.value = true;
   // インプット非活性フラグ
-  inputFlagRef.value = true;
+  inputDisableFlagRef.value = true;
 
 
   // 人口衛星クラスインスタンス生成
@@ -115,11 +131,6 @@ const calcStart = async () => {
       h: parseFloat(heightRef.value),
       scale: parseFloat(scaleRef.value),
   });
-
-  console.log('planetClass.firstCosmicVelocity')
-  console.log(planetClass.firstCosmicVelocity)
-  console.log('planetClass.SecondCosmicVelocity')
-  console.log(planetClass.SecondCosmicVelocity)
 
   if (parseFloat(speedRef.value) <=  planetClass.firstCosmicVelocity) {
     // 速度が第一宇宙速度以下の場合
@@ -209,8 +220,15 @@ let date = new Date();
             // 中心星に衝突した物体は取り除く 
             artificialSatelliteObj[i] = null; 
           }
+          // フラグ判定
+          if(!canvasFlagRef.value) {
+            artificialSatelliteObj[i] = null; 
+            xSpeedRef.value = ySpeedRef.value = xPositionRef.value = yPositionRef.value = dateRef.value = 0;
+          } 
+          
         }
       });
+      if(!canvasFlagRef.value) break;
       df--;
     }
     // 衝突した物体を配列から除去 
@@ -236,24 +254,44 @@ let date = new Date();
 
 // 計算終了
 const calcStop = () => {
+  // キャンバス描画
+  canvasFlagRef.value = false;
   // 非活性を解除
-  inputFlagRef.value = false;
-
+  inputDisableFlagRef.value = false;
 }
 </script>
 
 <style scoped>
 
 
-.up_contents {
+.config_contents {
   display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
   margin: 20px;
 }
 
-
-.down_contents {
+.input_contents {
   display: flex;
-  margin: 20px;
+  flex-wrap: wrap;
 }
+
+.textbox_input {
+  display: flex;
+}
+
+.btn_contents {
+  display: flex;
+  flex-flow: column;
+}
+
+
+
+.main_contents {
+  display: flex;
+  justify-content: space-between;
+
+}
+
 
 </style>
