@@ -4,13 +4,20 @@
       <div class="input_contents">
         <div class="planet_select">
           <CustomSelectBox  :disableFlag="inputDisableFlagRef" @change="selectChange"/>
+          <p>※惑星を選択するとその惑星に応じた第一宇宙速度が入力されます</p>
         </div >
         <div class="textbox_input">
-          <CustomInput type="'number" :name="'height'" :label="'打ち上げ高度(km)'" v-model="heightRef"  :step="'0.01'" :placeholder="'正の整数で入力'" :disableFlag="inputDisableFlagRef" @input="heightRef = $event" />
-          <CustomInput v-if="inputResetFlagRef" type="'number" :step="'0.01'" :name="'speed'" :label="'初速度(km/s)'" v-model="speedRef" :placeholder="'正の整数で入力'" :disableFlag="inputDisableFlagRef" @input="speedRef = $event" />
-          <CustomInput v-if="inputResetFlagRef" type="'number" :step="'0.01'" :name="'mass'" :label="'惑星質量(kg)'" v-model="massRef" :placeholder="'正の整数で入力'" :disableFlag="inputDisableFlagRef" @input="massRef = $event" />
-          <CustomInput v-if="inputResetFlagRef" type="'number" :step="'0.01'" :name="'radius'" :label="'惑星半径(km)'" v-model="radiusRef" :placeholder="'正の整数で入力'" :disableFlag="inputDisableFlagRef" @input="radiusRef = $event" />
-          <CustomInput v-if="inputResetFlagRef" type="'number" :step="'0.01'" :name="'scale'" :label="'スケール(1km/px)'" v-model="scaleRef" :disableFlag="inputDisableFlagRef" :placeholder="'正の整数で入力'" @input="scaleRef = $event"/>
+          <div class="planet_info">
+            <CustomInput type="'number" :name="'height'" :label="'打ち上げ高度(km)'" v-model="heightRef"  :step="'0.01'" :placeholder="'正の整数で入力'" :disableFlag="inputDisableFlagRef" @input="heightRef = $event" />
+            <CustomInput v-if="inputResetFlagRef" type="'number" :step="'0.01'" :name="'speed'" :label="'初速度(km/s)'" v-model="speedRef" :placeholder="'正の整数で入力'" :disableFlag="inputDisableFlagRef" @input="speedRef = $event" />
+            <CustomInput v-if="inputResetFlagRef" type="'number" :step="'0.01'" :name="'mass'" :label="'惑星質量(kg)'" v-model="massRef" :placeholder="'正の整数で入力'" :disableFlag="inputDisableFlagRef" @input="massRef = $event" />
+            <CustomInput v-if="inputResetFlagRef" type="'number" :step="'0.01'" :name="'radius'" :label="'惑星半径(km)'" v-model="radiusRef" :placeholder="'正の整数で入力'" :disableFlag="inputDisableFlagRef" @input="radiusRef = $event" />
+          <!-- </div> -->
+          <!-- <div class="view_info"> -->
+            <CustomInput v-if="inputResetFlagRef" type="'number" :step="'0.01'" :name="'scale'" :label="'スケール(1km/px)'" v-model="scaleRef" :disableFlag="inputDisableFlagRef" :placeholder="'正の整数で入力'" @input="scaleRef = $event"/>
+            <CustomInput v-if="inputResetFlagRef" type="'number" :step="'0.01'" :name="'time_speed'" :label="'倍速時間(s)'" v-model="timeSpeedRef" :disableFlag="inputDisableFlagRef" :placeholder="'正の整数で入力'" @input="timeSpeedRef = $event"/>
+          </div>
+
         </div>
       </div>
   
@@ -79,6 +86,8 @@ const gravityCoefficientRef = ref(0);
 const dateRef = ref(0);
 // スケール
 const scaleRef = ref(30);
+// 時間経過スピード
+const timeSpeedRef = ref(200);
 // 惑星セレクトボックス
 const selectValueRef = ref(0);
 // キャンバス描画フラグ
@@ -185,7 +194,7 @@ const calcStart = async () => {
   // 1フレーム当たりの秒数
   let dt = 1 / fps; 
   // 倍速数
-  let speed = 200; 
+  let speed = timeSpeedRef.value; 
   // 開始時間
   let startTime; 
   // 経過フレーム数
@@ -277,6 +286,10 @@ const calcStop = () => {
 
 <style scoped>
 
+.planet_select {
+  display: flex;
+  margin-top: 40px;
+}
 
 .config_contents {
   display: flex;
@@ -292,6 +305,7 @@ const calcStop = () => {
 
 .textbox_input {
   display: flex;
+  flex-flow: column;
 }
 
 .btn_contents {
@@ -307,6 +321,19 @@ const calcStop = () => {
   display: flex;
   justify-content: space-between;
 
+}
+
+.planet_info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.view_info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 }
 
 

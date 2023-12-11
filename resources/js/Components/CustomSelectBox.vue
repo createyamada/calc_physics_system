@@ -49,7 +49,7 @@
 .select_box select {
     appearance: none;
     min-width: 230px;
-    height: 2.8em;
+    height: 2.4em;
     padding: .4em calc(.8em + 30px) .4em .8em;
     border: 2px solid var(--flame-cancel-color);
     border-radius: 3px;
