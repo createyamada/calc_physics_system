@@ -6,11 +6,11 @@
           <CustomSelectBox  :disableFlag="inputDisableFlagRef" @change="selectChange"/>
         </div >
         <div class="textbox_input">
-          <CustomInput :name="'height'" :label="'打ち上げ高度(km)'" v-model="heightRef" :placeholder="'正の整数で入力'" :disableFlag="inputDisableFlagRef" @input="heightRef = $event" />
-          <CustomInput v-if="inputResetFlagRef" :name="'speed'" :label="'初速度(km/s)'" v-model="speedRef" :placeholder="'正の整数で入力'" :disableFlag="inputDisableFlagRef" @input="speedRef = $event" />
-          <CustomInput v-if="inputResetFlagRef" :name="'mass'" :label="'惑星質量(kg)'" v-model="massRef" :placeholder="'正の整数で入力'" :disableFlag="inputDisableFlagRef" @input="massRef = $event" />
-          <CustomInput v-if="inputResetFlagRef" :name="'radius'" :label="'惑星半径(km)'" v-model="radiusRef" :placeholder="'正の整数で入力'" :disableFlag="inputDisableFlagRef" @input="radiusRef = $event" />
-          <CustomInput v-if="inputResetFlagRef" :name="'scale'" :label="'スケール(1km/px)'" v-model="scaleRef" :disableFlag="inputDisableFlagRef" :placeholder="'正の整数で入力'" @input="scaleRef = $event"/>
+          <CustomInput type="'number" :name="'height'" :label="'打ち上げ高度(km)'" v-model="heightRef"  :step="'0.01'" :placeholder="'正の整数で入力'" :disableFlag="inputDisableFlagRef" @input="heightRef = $event" />
+          <CustomInput v-if="inputResetFlagRef" type="'number" :step="'0.01'" :name="'speed'" :label="'初速度(km/s)'" v-model="speedRef" :placeholder="'正の整数で入力'" :disableFlag="inputDisableFlagRef" @input="speedRef = $event" />
+          <CustomInput v-if="inputResetFlagRef" type="'number" :step="'0.01'" :name="'mass'" :label="'惑星質量(kg)'" v-model="massRef" :placeholder="'正の整数で入力'" :disableFlag="inputDisableFlagRef" @input="massRef = $event" />
+          <CustomInput v-if="inputResetFlagRef" type="'number" :step="'0.01'" :name="'radius'" :label="'惑星半径(km)'" v-model="radiusRef" :placeholder="'正の整数で入力'" :disableFlag="inputDisableFlagRef" @input="radiusRef = $event" />
+          <CustomInput v-if="inputResetFlagRef" type="'number" :step="'0.01'" :name="'scale'" :label="'スケール(1km/px)'" v-model="scaleRef" :disableFlag="inputDisableFlagRef" :placeholder="'正の整数で入力'" @input="scaleRef = $event"/>
         </div>
       </div>
   
@@ -23,11 +23,11 @@
 
     <div class="main_contents">
       <div v-if="infoResetFlagRef" class="control_content">
-        <p v-if="infoResetFlagRef">X成分速度:{{ xSpeedRef }}</p>
-        <p v-if="infoResetFlagRef">Y成分速度:{{ ySpeedRef }}</p>
-        <p v-if="infoResetFlagRef">X成分位置:{{ xPositionRef }}</p>
-        <p v-if="infoResetFlagRef">Y成分位置:{{ yPositionRef }}</p>
-        <p v-if="infoResetFlagRef">仮想日付:{{ dateRef }}</p>
+        <p>X成分速度:{{ xSpeedRef }}</p>
+        <p>Y成分速度:{{ ySpeedRef }}</p>
+        <p>X成分位置:{{ xPositionRef }}</p>
+        <p>Y成分位置:{{ yPositionRef }}</p>
+        <p>仮想日付:{{ dateRef }}</p>
       </div>
       <div>
         <canvas v-show="canvasFlagRef" id="canvas" width="640" height="500"></canvas>
@@ -74,11 +74,11 @@ const massRef = ref(5.972 * 1e24);
 // 惑星半径
 const radiusRef = ref(6378.1);
 // 重力係数
-const gravityCoefficientRef = ref(Number(Const.G) * Number(massRef.value));
+const gravityCoefficientRef = ref(0);
 // 日付
 const dateRef = ref(0);
 // スケール
-const scaleRef = ref(50);
+const scaleRef = ref(30);
 // 惑星セレクトボックス
 const selectValueRef = ref(0);
 // キャンバス描画フラグ
@@ -92,10 +92,22 @@ const infoResetFlagRef = ref(true);
 
 // セレクトボックスチェンジ
 const selectChange = async(event) => {
-  console.log('event');
-  console.log(event);
+  // 各情報の更新
   massRef.value = Const.PLANET_INFO?.[event].m;
   radiusRef.value = Const.PLANET_INFO?.[event].r;
+  scaleRef.value = Const.PLANET_INFO?.[event].scale;
+
+  // 惑星クラスインスタンス生成
+  let planetClass = new PlanetClass({
+      r: parseFloat(radiusRef.value),
+      m: parseFloat(massRef.value),
+      h: parseFloat(heightRef.value),
+      scale: parseFloat(scaleRef.value),
+  });
+
+  // 速度の部分に第一宇宙速度を代入
+  speedRef.value = planetClass.firstCosmicVelocity;
+
   inputResetFlagRef.value = false;
   await nextTick()
   inputResetFlagRef.value = true;
@@ -111,6 +123,8 @@ const calcStart = async () => {
   // インプット非活性フラグ
   inputDisableFlagRef.value = true;
 
+
+  gravityCoefficientRef.value = parseFloat(Const.G) * parseFloat(massRef.value)
 
   // 人口衛星クラスインスタンス生成
   let artificialSatelliteObj = []; // 管理用配列
@@ -285,7 +299,9 @@ const calcStop = () => {
   flex-flow: column;
 }
 
-
+.control_content {
+  width: 100px;
+}
 
 .main_contents {
   display: flex;

@@ -1,7 +1,7 @@
 <template>
     <label class="select_box">
         <select :disabled="disableFlag" @change="handleChange">
-            <option v-for="planet in Const.PLANET_INFO" :key="key" :value="planet.i"> {{ planet.name }}</option>
+            <option v-for="planet in Const.PLANET_INFO" :key="key" :value="planet.id"> {{ planet.name }}</option>
         </select>
     </label>
 </template>

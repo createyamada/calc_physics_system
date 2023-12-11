@@ -2,10 +2,10 @@
     <div class="input_content">
         <h2 class="err_msg" v-show="isValidateErrRef">{{ validateErrMsgRef }}</h2>
 
-        <CustomInput :name="'angle'" :label="'角度'" :value="angleRef" :placeholder="'1~90の数値で入力'" @input="angleRef = $event"/>
-        <CustomInput :name="'speed'" :label="'速度'" :value="speedRef" :placeholder="'1以上の数値で入力'" @input="speedRef = $event"/>
-        <CustomInput :name="'step'" :label="'計測間隔(秒)'" :value="stepRef" :placeholder="'0より大きい数値で入力'" @input="stepRef = $event"/>
-        <CustomSubmitButton :label="'計算開始'" @click="calcStart" />
+        <CustomInput :type="'number'" :step="'0.01'" :name="'angle'" :label="'角度'" :value="angleRef" :placeholder="'1~90の数値で入力'" @input="angleRef = $event"/>
+        <CustomInput :type="'number'" :step="'0.01'" :name="'speed'" :label="'速度'" :value="speedRef" :placeholder="'1以上の数値で入力'" @input="speedRef = $event"/>
+        <CustomInput :type="'number'" :step="'0.01'" :name="'step'" :label="'計測間隔(秒)'" :value="stepRef" :placeholder="'0より大きい数値で入力'" @input="stepRef = $event"/>
+        <CustomSubmitButton type="'number'" :step="'0.01'" :label="'計算開始'" @click="calcStart" />
     </div>
 
 

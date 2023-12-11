@@ -1,11 +1,14 @@
 <template>
     <div class="container">
         <label>{{ label }} ：</label>
-        <input class="text_box" type="text"
+        <input class="text_box" 
+        :type="type"
+        :step="step"
         v-model="textValueRef"
         :name="name"
         :disabled="disableFlag"
-        :placeholder="placeholder" 
+        :placeholder="placeholder"
+
         @input="textChange">
     </div>
 </template>
@@ -19,6 +22,8 @@
         placeholder: String,
         modelValue: String,
         disableFlag: Boolean,
+        type: String,
+        step: String,
         label: String,
     });
 
