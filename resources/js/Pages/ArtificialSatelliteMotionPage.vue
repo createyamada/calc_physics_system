@@ -4,7 +4,7 @@
       <div class="input_contents">
         <div class="planet_select">
           <CustomSelectBox  :disableFlag="inputDisableFlagRef" @change="selectChange"/>
-          <p>※惑星を選択するとその惑星に応じた第一宇宙速度が入力されます</p>
+          <p>※惑星を選択するとその惑星に応じた第一宇宙速度が入力されます（誤差により＋1）</p>
         </div >
         <div class="textbox_input">
           <div class="planet_info">
@@ -22,7 +22,7 @@
       </div>
   
       <div class="btn_contents">
-        <CustomSubmitButton :label="'計算開始'" @click="calcStart" />
+        <CustomSubmitButton :label="'計算開始'" @click="clickHandle" />
         <CustomCancelButton :label="'クリア'" @click="calcStop" />
       </div>
 
@@ -40,7 +40,9 @@
         <canvas v-show="canvasFlagRef" id="canvas" width="640" height="500"></canvas>
       </div>
     </div>
-
+    <ErrorModal v-show="isErrorRef" :message="errorMsgRef" @close="errorModalClose()" />
+    <ConfirmationModal v-show="isConfirmationRef" :message="confirmationMsgRef" @ok="confirmationModalOk" @cancel="confirmationModalClose" />
+    
 
   </div>
 </template>
@@ -50,6 +52,8 @@ import { onMounted, ref , nextTick } from 'vue';
 import CustomSubmitButton from '@/Components/CustomSubmitButton.vue';
 import CustomCancelButton from '@/Components/CustomCancelButton.vue';
 import CustomSelectBox from '@/Components/CustomSelectBox.vue';
+import ErrorModal from '@/Components/ErrorModal.vue';
+import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import CustomInput from '@/Components/CustomInput.vue';
 import Common from '@/Utils/Common';
 import Const from '@/Utils/Const';
@@ -75,7 +79,7 @@ const yPositionRef = ref(0);
 // 打ち上げ高度
 const heightRef = ref(0);
 // 初速度
-const speedRef = ref(8.4);
+const speedRef = ref(8);
 // 惑星質量
 const massRef = ref(5.972 * 1e24);
 // 惑星半径
@@ -99,6 +103,19 @@ const inputDisableFlagRef = ref(false);
 // 情報リセットフラグ
 const infoResetFlagRef = ref(true);
 
+    // モーダル管理
+    // エラーフラグ
+    const isErrorRef = ref(false);
+    // エラーメッセージ
+    const errorMsgRef = ref('');
+    // 確認フラグ
+    const isConfirmationRef = ref(false);
+    // 確認メッセージ
+    const confirmationMsgRef = ref('');
+    // 確認OKフラグ
+    const confirmationFlagRef = ref(true);
+
+
 // セレクトボックスチェンジ
 const selectChange = async(event) => {
   // 各情報の更新
@@ -115,12 +132,45 @@ const selectChange = async(event) => {
   });
 
   // 速度の部分に第一宇宙速度を代入
-  speedRef.value = planetClass.firstCosmicVelocity;
+  speedRef.value = planetClass.firstCosmicVelocity + 1;
 
   inputResetFlagRef.value = false;
   await nextTick()
   inputResetFlagRef.value = true;
     
+}
+
+const clickHandle = () => {
+
+  // 惑星クラスインスタンス生成
+  let planetClass = new PlanetClass({
+      r: parseFloat(radiusRef.value),
+      m: parseFloat(massRef.value),
+      h: parseFloat(heightRef.value),
+      scale: parseFloat(scaleRef.value),
+  });
+
+  let isConfirmation = false;
+
+  if (parseFloat(speedRef.value) <=  planetClass.firstCosmicVelocity) {
+    // 速度が第一宇宙速度以下の場合
+    console.log('第一宇宙速度以下');
+    confirmationModalOpen('速度が第1宇宙速度を下回っています\n必ず惑星に衝突しますがよろしいですか？');
+    isConfirmation = true;
+  }
+
+  if (parseFloat(speedRef.value) >=  planetClass.SecondCosmicVelocity) {
+    // 速度が第二宇宙速度以下の場合
+    console.log('第二宇宙速度以上');
+    confirmationModalOpen('速度が第2宇宙速度を上回っています\n必ず衛星軌道に乗らず彼方に行きますがよろしいですか？');
+    isConfirmation = true;
+  }
+
+  if (!isConfirmation) {
+    calcStart();
+  }
+
+
 }
 
 
@@ -155,16 +205,7 @@ const calcStart = async () => {
       scale: parseFloat(scaleRef.value),
   });
 
-  if (parseFloat(speedRef.value) <=  planetClass.firstCosmicVelocity) {
-    // 速度が第一宇宙速度以下の場合
-    console.log('第一宇宙速度以下')
-  }
 
-  if (parseFloat(speedRef.value) >=  planetClass.SecondCosmicVelocity) {
-    // 速度が第二宇宙速度以下の場合
-    console.log('第二宇宙速度以上')
-    
-  }
 
   const canvas = document.getElementById("canvas"),
   ctx = canvas.getContext("2d");
@@ -242,6 +283,8 @@ let date = new Date();
           if (obj.r <= radiusRef.value) {
             // 中心星に衝突した物体は取り除く 
             artificialSatelliteObj[i] = null; 
+            errorModalOpen('人口衛星が惑星に衝突しました');
+            canvasFlagRef.value = false;
           }
           // フラグ判定
           if(!canvasFlagRef.value) {
@@ -282,6 +325,35 @@ const calcStop = () => {
   // 非活性を解除
   inputDisableFlagRef.value = false;
 }
+
+
+    // モーダル閉じるボタンクリック
+    const errorModalClose = async() => {
+        isErrorRef.value = false;
+    };
+
+    // エラーモーダルを開く
+    const errorModalOpen = async(msg) => {
+        isErrorRef.value = true;
+        errorMsgRef.value = msg;
+    }
+
+    // 確認モーダルクローズクリック
+    const confirmationModalClose = async() => {
+      isConfirmationRef.value = false;
+    };
+
+    // 確認モーダルOKクリック
+    const confirmationModalOk = async() => {
+      isConfirmationRef.value = false;
+      calcStart();
+    };
+
+    // 確認モーダルを開く
+    const confirmationModalOpen = async(msg) => {
+        isConfirmationRef.value = true;
+        confirmationMsgRef.value = msg;
+    }
 </script>
 
 <style scoped>
