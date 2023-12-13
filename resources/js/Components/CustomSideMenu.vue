@@ -9,9 +9,13 @@
             </div>
 
             <div class="side_menu_content">
-                <span v-for="(val,key) in CONTENTS" :key="key">
+                <span v-for="(val, key) in CONTENTS" :key="key">
                     <button class="side_menu_content_btn">
-                        <router-link :class="['link' , { 'is-selected': isSelect(val) }]" :to="val.path">{{ val.label }}</router-link>
+                        <router-link
+                            :class="['link', { 'is-selected': isSelect(val) }]"
+                            :to="val.path"
+                            >{{ val.label }}</router-link
+                        >
                     </button>
                 </span>
             </div>
@@ -20,33 +24,29 @@
 </template>
 
 <script setup>
-
 // const
 // サイドメニュー表示内容
 const CONTENTS = [
-    {'path': '/parabolicMotion' , 'label':'放物運動計算'},
-    {'path': '/ArtificialSatelliteMotionPage' , 'label':'人口衛星シミュレーション'},
-
-    
+    { path: "/parabolicMotion", label: "放物運動計算" },
+    {
+        path: "/ArtificialSatelliteMotionPage",
+        label: "人口衛星シミュレーション",
+    },
 ];
-
 
 const isSelect = (val) => {
     return true;
-}
-
-
+};
 </script>
 
 <style scoped>
-
-
 .side_menu {
     display: flex;
     margin: 20px 20px 18px 8px;
 }
 
-.side_menu_header , .link {
+.side_menu_header,
+.link {
     font-style: var(--ft-style-normal);
     font-size: var(--ft-size-14);
 }
@@ -72,14 +72,14 @@ const isSelect = (val) => {
     padding-bottom: 10px;
     position: relative;
     z-index: 1;
-    transition: .3s;
+    transition: 0.3s;
 }
 
 .link:hover {
     background-color: var(--side-hover-color);
     color: white;
     font-weight: bold;
-    transition: all .4s ease-out;
+    transition: all 0.4s ease-out;
     z-index: 1;
 }
 
@@ -94,21 +94,19 @@ const isSelect = (val) => {
     background: var(--active-color);
     transform-origin: 100% 50%;
     transform: scaleX(0);
-    transition: transform ease .3s;
-  }
+    transition: transform ease 0.3s;
+}
 
-
-  .link:hover::before {
+.link:hover::before {
     transform-origin: 0% 50%;
     transform: scaleX(1);
-  }
-
+}
 
 .link.router-link-active {
     background-color: var(--dark-color);
     color: var(--dark-color);
     color: white;
-    font-weight: bold;  
+    font-weight: bold;
 }
 
 .side_menu_content_btn {
@@ -117,6 +115,4 @@ const isSelect = (val) => {
     width: calc(100% - 40px);
     margin: 6px 20px;
 }
-
-
 </style>

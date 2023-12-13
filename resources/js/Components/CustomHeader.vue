@@ -13,7 +13,6 @@
 </template>
 
 <script setup>
-
 // 連打防止用ログアウトボタンフラグ
 // const isLogoutBtnRef = (true);
 
@@ -51,7 +50,7 @@
 //                     throw message;
 //                 }
 //             })
-    
+
 //     } catch (err) {
 //         // エラー時の処理
 
@@ -60,11 +59,9 @@
 //     }
 
 // }
-
 </script>
 
 <style scoped>
-
 .container {
     display: flex;
     justify-content: space-between;
@@ -78,7 +75,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 30px
+    margin: 30px;
 }
 
 .btn-container {
@@ -94,13 +91,13 @@
     margin: 30px;
     position: relative;
     z-index: 1;
-    transition: .3s;
+    transition: 0.3s;
 }
 
 .logout:hover {
     color: white;
     font-weight: bold;
-    transition: all .4s ease-out;
+    transition: all 0.4s ease-out;
     z-index: 1;
 }
 
@@ -116,12 +113,11 @@
     border-radius: 30px;
     transform-origin: 100% 50%;
     transform: scaleX(0);
-    transition: transform ease .3s;
+    transition: transform ease 0.3s;
 }
 
 .logout:hover::before {
     transform-origin: 0% 50%;
     transform: scaleX(1);
-  }
-
+}
 </style>

@@ -1,11 +1,8 @@
 <template>
-    <div class="container">
-
-    </div>
+    <div class="container"></div>
 </template>
 
-<script setup>
-</script>
+<script setup></script>
 
 <style scoped>
 .container {
