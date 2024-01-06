@@ -5,6 +5,7 @@
                 <div class="planet_select">
                     <CustomSelectBox
                         :disableFlag="inputDisableFlagRef"
+                        :values="Const.PLANET_INFO"
                         @change="selectChange"
                     />
                     <p>
@@ -56,8 +57,6 @@
                             :disableFlag="inputDisableFlagRef"
                             @input="radiusRef = $event"
                         />
-                        <!-- </div> -->
-                        <!-- <div class="view_info"> -->
                         <CustomInput
                             v-if="inputResetFlagRef"
                             type="'number"

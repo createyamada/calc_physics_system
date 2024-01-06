@@ -31,12 +31,25 @@
             :placeholder="'0より大きい数値で入力'"
             @input="stepRef = $event"
         />
-        <CustomSubmitButton
+        <div class="margin_top20">
+            <CustomSelectBox
+            @change="selectChange"
+            :values="[
+                {id:0,name:'運動方程式'},
+                {id:1,name:'数値計算：オイラー法'},
+                {id:0,name:'数値計算：ルンゲ・クッタ法'},
+            ]"
+        />
+        </div>
+        <div class="margin_top20">
+            <CustomSubmitButton
             type="'number'"
             :step="'0.01'"
             :label="'計算開始'"
             @click="calcStart"
         />
+        </div>
+
     </div>
 
     <LineGraph
@@ -58,6 +71,7 @@ import { ref, onMounted } from "vue";
 import Request from "@/Utils/Request";
 import LineGraph from "@/Components/Graphs/LineGraph.vue";
 import CustomInput from "@/Components/CustomInput.vue";
+import CustomSelectBox from "@/Components/CustomSelectBox.vue";
 import CustomSubmitButton from "@/Components/CustomSubmitButton.vue";
 import ErrorModal from "@/Components/ErrorModal.vue";
 import Common from "@/Utils/Common";
@@ -78,6 +92,8 @@ const angleRef = ref("");
 const speedRef = ref("");
 // 計測間隔
 const stepRef = ref("");
+// 計算方法
+const calcTypeRef = ref(0);
 
 // 連打防止用ボタンフラグ
 const isCalcBtnRef = ref(true);
@@ -93,12 +109,12 @@ const isValidateErrRef = ref(false);
 const validateErrMsgRef = ref("");
 
 // マウント前処理
-onMounted(async () => {
-    try {
-    } catch (err) {
-        console.log(err);
-    }
-});
+// onMounted(async () => {
+//     try {
+//     } catch (err) {
+//         console.log(err);
+//     }
+// });
 
 // グラフ更新
 const updateChart = async () => {
@@ -108,7 +124,11 @@ const updateChart = async () => {
             speedRef.value,
             stepRef.value
         );
-        chartDataRef.value = res.data?.position ?? [];
+        // chartDataRef.value = res.data?.position ?? [];
+        let data = res.data?.position ?? [];
+        chartDataRef.value.push(data);
+        console.log('chartDataRef.value')
+        console.log(chartDataRef.value)
     } catch (err) {
         console.log(err.message);
         // isErrorRef.value = true;
@@ -120,6 +140,13 @@ const updateChart = async () => {
         isCalcBtnRef.value = false;
     }
 };
+
+// セレクトボックスチェンジ
+const selectChange = async (event) => {
+    // 各情報の更新
+    calcTypeRef.value = event;
+};
+
 
 // 計算開始ボタンクリック
 const calcStart = async () => {
@@ -133,6 +160,7 @@ const calcStart = async () => {
 
     // グラフ更新
     await updateChart();
+    isCalcBtnRef.value = true;
 };
 
 // モーダル閉じるボタンクリック
@@ -159,5 +187,9 @@ const validateErr = async (msg) => {
     flex-flow: column;
     justify-content: center;
     align-items: center;
+}
+
+.margin_top20 {
+    margin-top: 20px;
 }
 </style>

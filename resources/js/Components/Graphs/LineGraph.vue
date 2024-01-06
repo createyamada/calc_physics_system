@@ -41,20 +41,24 @@ export default {
     },
     setup(props) {
         const data = computed(() => {
+            console.log('props.chartData')
             console.log(props.chartData)
+            let datas = [];
+            for(let i=0;i<props.chartData.length;i++){
+                datas.push({
+                    data: props.chartData[i],
+                    fill: false,
+                    showLine: true,
+                    label: "放物運動",
+                    borderColor: '#f87979',
+                    backgroundColor:'#f87979',
+                });
+            }
+            console.log('datas')
+            console.log(datas)
             return {
-                labels: props.chartLabel,
-                datasets: [
-                    {
-                        fill: false,
-                        showLine: true,
-                        label: "放物運動",
-                        borderColor: '#f87979',
-                        backgroundColor:'#f87979',
-                        data: props.chartData
-                        
-                    }
-                ]
+                // labels: props.chartLabel,
+                datasets: datas
             }
         });
 
@@ -73,9 +77,8 @@ export default {
                     tooltip: {
                         callbacks: {
                             label: function(tootipItem) {
-                                console.log(tootipItem)
 
-                                return "x移動距離：" + tootipItem.dataset.data[tootipItem.dataIndex].x　+ '|' + 'y移動距離：' +tootipItem.dataset.data[tootipItem.dataIndex].y;
+                                return "x移動距離：" + tootipItem.dataset.data[tootipItem.dataIndex].x　+ '　|　' + 'y移動距離：' +tootipItem.dataset.data[tootipItem.dataIndex].y;
                             },
                             footer: function(tootipItem) {
                                 // console.log(tootipItem[0].dataset.data)

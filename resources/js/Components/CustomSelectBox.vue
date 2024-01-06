@@ -2,8 +2,8 @@
     <label class="select_box">
         <select :disabled="disableFlag" @change="handleChange">
             <option
-                v-for="planet in Const.PLANET_INFO"
-                :key="key"
+                v-for="planet in values"
+                :key="planet.id"
                 :value="planet.id"
             >
                 {{ planet.name }}
@@ -19,6 +19,7 @@ import Const from "@/Utils/Const";
 
 // props
 const props = defineProps({
+    values: Object,
     modelValue: String,
     disableFlag: Boolean,
 });
