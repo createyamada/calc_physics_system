@@ -102,7 +102,7 @@ const isCalcBtnRef = ref(true);
 // エラーフラグ
 const isErrorRef = ref(false);
 // エラーメッセージ
-const errorMsgRef = ref("テスト");
+const errorMsgRef = ref("");
 // バリデーションエラーフラグ
 const isValidateErrRef = ref(false);
 // バリデーションエラーメッセージ
@@ -122,13 +122,12 @@ const updateChart = async () => {
         const res = await Request.calcParabolicMotion(
             angleRef.value,
             speedRef.value,
-            stepRef.value
+            stepRef.value,
+            calcTypeRef.value,
         );
         // chartDataRef.value = res.data?.position ?? [];
         let data = res.data?.position ?? [];
         chartDataRef.value.push(data);
-        console.log('chartDataRef.value')
-        console.log(chartDataRef.value)
     } catch (err) {
         console.log(err.message);
         // isErrorRef.value = true;

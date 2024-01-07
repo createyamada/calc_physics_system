@@ -21,7 +21,7 @@ class CalcController extends Controller
         $angle = (Float)$request->angle;
         $speed = (Float)$request->speed;
         $step = !isset($request->step) ? 1 : (Float)$request->step;
-        $calc_type = $request->type;
+        $calc_type = $request->calc_type;
 
         // 計算タイプに応じた計算関数を呼び出す
         try {
@@ -33,8 +33,17 @@ class CalcController extends Controller
                     break;
 
                 case 1 :
+                    \Log::debug('ここにきている？オイラー法');
                     // 数値計算（オイラー法）を利用した数値的計算
                     $result = $equation->NumericalCalculationEuler($angle , $speed , $step);
+                    break;
+
+                case 2 :
+                    // 数値計算（ルンゲ・クッタ法）を利用した数値計算
+                    $result = $equation->NumericalCalculationRungeKutta($angle , $speed , $step);
+                    break;
+                
+                default:
                     break;
 
             }

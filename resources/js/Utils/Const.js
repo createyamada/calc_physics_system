@@ -104,7 +104,21 @@ const PLANET_INFO = [
     },
 ];
 
+// グラフカラー
+const GRAPH_COLORS = [
+    '#FF4B00',
+    '#005AFF',
+    '#03AF7A',
+    '#4DC4FF',
+    '#F6AA00',
+    '#FFF100',
+    '#000000',
+    '#990099',
+    '#84919E',
+];
+
 export default {
     G,
     PLANET_INFO,
+    GRAPH_COLORS,
 };

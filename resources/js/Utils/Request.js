@@ -5,13 +5,16 @@ import { saveAs } from "file-saver";
  * 放物運動計算API
  * @param {*} angle
  * @param {*} speed
+ * @param {*} step
+ * @param {*} calc_type
  * @returns
  */
-const calcParabolicMotion = (angle = "", speed = "", step = "") => {
+const calcParabolicMotion = (angle = "", speed = "", step = "", calc_type = "") => {
     const params = {
         angle: angle,
         speed: speed,
         step: step,
+        calc_type: calc_type,
     };
 
     return get("api/calcParabolicMotion", params);

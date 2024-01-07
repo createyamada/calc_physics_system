@@ -12,7 +12,8 @@ import {
   Tooltip,
   Legend
 } from 'chart.js'
-import { Scatter } from 'vue-chartjs'
+import { Scatter } from 'vue-chartjs';
+import Const from "@/Utils/Const";
 
 ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
 
@@ -36,28 +37,26 @@ export default {
         },
         backgroundColor: {
             type: String,
-            default: '#E2E2E2'
         }
     },
     setup(props) {
         const data = computed(() => {
-            console.log('props.chartData')
-            console.log(props.chartData)
+            let colors = Const.GRAPH_COLORS;
             let datas = [];
             for(let i=0;i<props.chartData.length;i++){
+                // 色８色ループ
+                let index = i % 8;
                 datas.push({
                     data: props.chartData[i],
-                    fill: false,
+                    fill: true,
                     showLine: true,
                     label: "放物運動",
-                    borderColor: '#f87979',
-                    backgroundColor:'#f87979',
+                    borderColor: colors[index],
+                    backgroundColor: colors[index],
                 });
             }
-            console.log('datas')
-            console.log(datas)
+
             return {
-                // labels: props.chartLabel,
                 datasets: datas
             }
         });
@@ -68,21 +67,17 @@ export default {
                 maintainAspectRatio: true,
                 plugins: {
                     legend: {
-                        // display: props.title ? true : false,
                         align: 'start',
                         labels: {
-                            boxWidth: 0
                         }
                     },
                     tooltip: {
                         callbacks: {
                             label: function(tootipItem) {
-
                                 return "x移動距離：" + tootipItem.dataset.data[tootipItem.dataIndex].x　+ '　|　' + 'y移動距離：' +tootipItem.dataset.data[tootipItem.dataIndex].y;
                             },
                             footer: function(tootipItem) {
-                                // console.log(tootipItem[0].dataset.data)
-                                return "フッターツールチップ" + tootipItem[0];
+                                // return "フッターツールチップ" + tootipItem[0];
                             }
                         }
                     }
