@@ -92,10 +92,10 @@ class CalcController extends Controller
                 // 1000単位でガベージコレクションを実行
                 if ($cnt % 1000 === 0 ) gc_collect_cycles();
                 
-                // Y軸が0以下の場合ループを終了
                 $compare = $cnt;
+                // 微分方程式の解以外は初期値が代入されているのでカウンターを調整する
                 if($calc_type !== 0) $compare = $cnt === 0 ? 0 : $cnt+1;
-                
+                // Y軸が0以下の場合ループを終了
                 if($result->position[$compare]['y'] < 0) $loopFlag = false;
                 
                 // 変数をインクリメント
