@@ -20,7 +20,7 @@ class NumericalCalcEuler extends Equation
 
     }
 
-    public function get_y(Float $t , Float $x , Float $vx) {
-        return $x + ($vx * $t);
+    public function get_y(Float $t , Float $y , Float $vy) {
+        return $y + ($vy * $t);
     }
 }

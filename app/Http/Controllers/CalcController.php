@@ -52,21 +52,30 @@ class CalcController extends Controller
                     // 数値計算オイラー法の場合
                     // 数値計算オイラー法インスタンス生成
                     $calc = new NumericalCalcEuler($angle , $speed , $digit);
-                    // 初期値作成
-                    $result->position[] = [
-                        // x位置初期値
-                        'x' => 0.00,
-                        // y位置初期値
-                        'y' => 0.00
-                    ];
-                    // x速度初期値
-                    $result->xSpeed[] = $speed * cos(deg2rad( $angle ));
-                    // y速度初期値
-                    $result->ySpeed[] = $speed * sin(deg2rad( $angle ));
+                    break;
+
+                case 2 :
+                    // 数値計算ルンゲクッタ法の場合
+                    // 数値計算ルンゲクッタ法インスタンス生成
+                    $calc = new NumericalCalcRungeKutta($angle , $speed , $digit);
                     break;
 
                 default :
                     break;
+            }
+
+            if ($calc_type !== 0) {
+                // 初期値作成
+                $result->position[] = [
+                    // x位置初期値
+                    'x' => 0.00,
+                    // y位置初期値
+                    'y' => 0.00
+                ];
+                // x速度初期値
+                $result->xSpeed[] = $speed * cos(deg2rad( $angle ));
+                // y速度初期値
+                $result->ySpeed[] = $speed * sin(deg2rad( $angle ));
             }
 
             // ループ実行フラグを設定
