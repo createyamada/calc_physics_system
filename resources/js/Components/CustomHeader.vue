@@ -5,9 +5,9 @@
             物理計算システム
         </h1>
         <div>
-            <div class="btn-container">
+            <!-- <div class="btn-container">
                 <button class="logout">ログアウト</button>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
