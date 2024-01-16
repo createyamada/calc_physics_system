@@ -36,6 +36,5 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY . ./
 COPY --from=node-builder /app/public ./public
-RUN update-alternatives --set php /usr/bin/php8.1
 RUN composer install
 RUN chown -Rf www-data:www-data ./
