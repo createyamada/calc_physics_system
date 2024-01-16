@@ -8,7 +8,7 @@ FROM node:20-bullseye-slim as node-builder
 # COPY . ./var/www/html
 # RUN cd /var/www/html && npm ci && npm run prod
 COPY . ./app
-RUN cd /app && npm ci && npm run prod
+RUN cd /app && npm install && npm run build
 
 # DockerHubのphp apacheのコンテナを指定
 FROM php:8.1.5-apache
