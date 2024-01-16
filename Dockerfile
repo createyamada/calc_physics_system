@@ -27,7 +27,7 @@ RUN apt-get update && apt-get upgrade -y && \
 # PHP標準の拡張モジュールをインストール、有効化
 RUN docker-php-ext-install -j "$(nproc)" opcache && docker-php-ext-enable opcache
 
-RUN sed -i 's/80/8080/g' /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
+RUN sed -i 's/80/8000/g' /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
 RUN sed -i 's#/var/www/html#/var/www/html/public#g' /etc/apache2/sites-available/000-default.conf
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
@@ -36,8 +36,11 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY . ./
 COPY --from=node-builder /app/public ./public
+
+# インストールにてコマンド入力をしないため設定ファイルの値を設定
 ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV COMPOSER_NO_INTERACTION 1
+#コンポーザをインストール
 RUN composer update
 RUN composer install
 RUN chown -Rf www-data:www-data ./

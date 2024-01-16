@@ -51,9 +51,6 @@ const get = (url, params = {}, isGetFile = false) => {
         };
     }
 
-    // 一時的にポートを8080にする
-    url += ":8080";
-
     return axios
         .get(url, config)
         .then(function (res) {
