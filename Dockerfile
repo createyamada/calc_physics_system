@@ -34,5 +34,5 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 COPY . ./
 COPY --from=node-builder /app/public ./public
-RUN composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader
+RUN composer install
 RUN chown -Rf www-data:www-data ./
