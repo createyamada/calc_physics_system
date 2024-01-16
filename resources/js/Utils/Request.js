@@ -9,7 +9,12 @@ import { saveAs } from "file-saver";
  * @param {*} calc_type
  * @returns
  */
-const calcParabolicMotion = (angle = "", speed = "", step = "", calc_type = "") => {
+const calcParabolicMotion = (
+    angle = "",
+    speed = "",
+    step = "",
+    calc_type = ""
+) => {
     const params = {
         angle: angle,
         speed: speed,
@@ -45,6 +50,10 @@ const get = (url, params = {}, isGetFile = false) => {
             params,
         };
     }
+
+    // 一時的にポートを8080にする
+    url += ":8080";
+
     return axios
         .get(url, config)
         .then(function (res) {
