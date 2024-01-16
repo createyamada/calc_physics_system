@@ -36,5 +36,5 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY . ./
 COPY --from=node-builder /app/public ./public
-RUN composer install
+RUN sudo composer install
 RUN chown -Rf www-data:www-data ./
