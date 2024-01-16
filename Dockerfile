@@ -13,6 +13,8 @@ RUN cd /app && npm install && npm run build
 # DockerHubのphp apacheのコンテナを指定
 FROM php:8.1.5-apache
 
+WORKDIR /var/www/html
+
 # 必要モジュールをインストール
 # 必要なパッケージのインストールとDocker PHP Extensionsのインストール
 RUN apt-get update && apt-get upgrade -y && \
@@ -31,8 +33,9 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www/html
+
 COPY . ./
 COPY --from=node-builder /app/public ./public
+RUN update-alternatives --set php /usr/bin/php8.1
 RUN composer install
 RUN chown -Rf www-data:www-data ./
