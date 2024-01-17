@@ -44,3 +44,6 @@ ENV COMPOSER_NO_INTERACTION 1
 RUN composer update
 RUN composer install
 RUN chown -Rf www-data:www-data ./
+
+# エントリーポイントを指定
+ENTRYPOINT ["php", "artisan", "serve", "--host=0.0.0.0"]
