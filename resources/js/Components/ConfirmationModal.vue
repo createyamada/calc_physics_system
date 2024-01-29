@@ -22,7 +22,7 @@ const emit = defineEmits(["ok", "cancel"]);
 
 // OKボタンクリック
 const modalOk = async () => {
-    emit("OK");
+    emit("ok");
 };
 
 // CANCELボタンクリック
