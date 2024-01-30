@@ -1,5 +1,7 @@
 <template>
-    <a class="submit_btn" @click="clickHandle">{{ label }}</a>
+    <button class="submit_btn" @click="clickHandle" :disabled="disableFlag">
+        {{ label }}
+    </button>
 </template>
 
 <script setup>
@@ -9,6 +11,7 @@ import { useRouter } from "vue-router";
 // props
 const props = defineProps({
     label: String,
+    disableFlag: Boolean,
 });
 
 // emit
@@ -18,15 +21,10 @@ const emit = defineEmits(["click"]);
 const clickHandle = async () => {
     emit("click");
 };
-
-// ボタンクリックイベント
-const handleClick = () => {
-    emit("click");
-};
 </script>
 
 <style scoped>
-a.submit_btn {
+button.submit_btn {
     display: block;
     text-align: center;
     text-decoration: none;
@@ -40,7 +38,7 @@ a.submit_btn {
     transition: 0.5s;
 }
 
-a.submit_btn:hover {
+button.submit_btn:hover {
     color: #fff;
     background: var(--active-color);
 }

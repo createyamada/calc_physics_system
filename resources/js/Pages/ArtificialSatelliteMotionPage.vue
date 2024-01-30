@@ -84,7 +84,11 @@
             </div>
 
             <div class="btn_contents">
-                <CustomSubmitButton :label="'計算開始'" @click="clickHandle" />
+                <CustomSubmitButton
+                    :label="'計算開始'"
+                    @click="clickHandle"
+                    :disableFlag="inputDisableFlagRef"
+                />
                 <CustomCancelButton :label="'クリア'" @click="calcStop" />
             </div>
         </div>
@@ -185,8 +189,6 @@ const errorMsgRef = ref("");
 const isConfirmationRef = ref(false);
 // 確認メッセージ
 const confirmationMsgRef = ref("");
-// 確認OKフラグ
-const confirmationFlagRef = ref(true);
 
 // セレクトボックスチェンジ
 const selectChange = async (event) => {
@@ -277,13 +279,12 @@ const calcStart = async () => {
 
     const canvas = document.getElementById("canvas"),
         ctx = canvas.getContext("2d");
-
     // デバイスピクセルレシオ
     const dpr = window.devicePixelRatio || 1;
     // Canvas横幅
-    const width = canvas.width;
+    const width = 640;
     // Canvas縦幅
-    const height = canvas.height;
+    const height = 500;
 
     /** 高解像度対応 */
     // Canvasをピクセル比で拡大
@@ -292,7 +293,7 @@ const calcStart = async () => {
     // CSSで元のサイズに戻す
     canvas.style.width = width + "px";
     canvas.style.height = height + "px";
-
+    console.log();
     // 座標系の設定
     ctx.transform(dpr, 0, 0, -dpr, (width * dpr) / 2, (height * dpr) / 2);
     ctx.fillStyle = "#fff";
@@ -395,6 +396,10 @@ const calcStop = () => {
     canvasFlagRef.value = false;
     // 非活性を解除
     inputDisableFlagRef.value = false;
+    let canvas = document.getElementById("canvas");
+    let ctx = canvas.getContext("2d");
+    // 画面の消去
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 };
 
 // モーダル閉じるボタンクリック
