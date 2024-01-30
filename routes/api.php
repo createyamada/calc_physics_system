@@ -15,3 +15,4 @@ use App\Http\Controllers\CalcController;
 |
 */
 Route::get('/calcParabolicMotion' , [CalcController::class , 'parabolicMotion']); // 放物運動計算API
+Route::get('/outerApiTest' , [CalcController::class , 'outerApiTest']); // 放物運動計算API

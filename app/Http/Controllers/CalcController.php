@@ -7,7 +7,7 @@ use App\Http\Requests\ParabolicMotionRequest;
 use App\Lib\Classes\EquationOfMotion;
 use App\Lib\Classes\NumericalCalcEuler;
 use App\Lib\Classes\NumericalCalcRungeKutta;
-
+use Illuminate\Support\Facades\Http;
 
 class CalcController extends Controller
 {
@@ -121,5 +121,20 @@ class CalcController extends Controller
             throw Exception($e); 
         } 
         return response()->json($result);
+    }
+
+    /**
+     * 放物運動計算
+     * @param Request $request
+     * @return Object $result
+     */
+    public function outerApiTest(Request $request): Object
+    {
+        \Log::debug('テスト'); 
+        $url = env('STELLARING_API_URL') . '/';
+        $result = Http::get($url);
+        \Log::debug($result); 
+
+        return $result;
     }
 }

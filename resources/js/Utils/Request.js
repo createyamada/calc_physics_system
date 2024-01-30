@@ -26,6 +26,14 @@ const calcParabolicMotion = (
 };
 
 /**
+ * 外部API連携テスト用
+ * @returns
+ */
+const outerApiTest = () => {
+    return get("api/outerApiTest");
+};
+
+/**
  * 共通get処理
  * @param {*} url
  * @param {*} params
@@ -98,4 +106,5 @@ const post = (url, params = {}) => {
 
 export default {
     calcParabolicMotion,
+    outerApiTest,
 };

@@ -3,6 +3,7 @@ import MainPage from "@/Pages/MainPage.vue";
 import TopPage from "@/Pages/TopPage.vue";
 import ParabolicMotionPage from "@/Pages/ParabolicMotionPage.vue";
 import ArtificialSatelliteMotionPage from "@/Pages/ArtificialSatelliteMotionPage.vue";
+import OuterApiTestPage from "@/Pages/OuterApiTestPage.vue";
 
 const routes = [
     {
@@ -32,11 +33,19 @@ const routes = [
                 },
             },
             {
-                path: "/ArtificialSatelliteMotionPage",
+                path: "/artificialSatelliteMotion",
                 name: "ArtificialSatelliteMotionPage",
                 component: ArtificialSatelliteMotionPage,
                 meta: {
                     title: "人口衛星シミュレーション",
+                },
+            },
+            {
+                path: "/outerApiTest",
+                name: "OuterApiTestPage",
+                component: OuterApiTestPage,
+                meta: {
+                    title: "外部API呼び出しテスト画面",
                 },
             },
         ],
