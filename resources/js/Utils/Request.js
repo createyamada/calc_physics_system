@@ -26,6 +26,22 @@ const calcParabolicMotion = (
 };
 
 /**
+ * ログインAPI
+ * @param {*} user_id
+ * @param {*} password
+ * @returns
+ */
+const login = (user_id = "", password = "") => {
+    console.log(user_id);
+    const params = {
+        user_id: user_id,
+        password: password,
+    };
+
+    return post("api/login", params);
+};
+
+/**
  * 外部API連携テスト用
  * @returns
  */
@@ -107,4 +123,5 @@ const post = (url, params = {}) => {
 export default {
     calcParabolicMotion,
     outerApiTest,
+    login,
 };

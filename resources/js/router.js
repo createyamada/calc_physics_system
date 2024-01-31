@@ -3,6 +3,7 @@ import MainPage from "@/Pages/MainPage.vue";
 import TopPage from "@/Pages/TopPage.vue";
 import ParabolicMotionPage from "@/Pages/ParabolicMotionPage.vue";
 import ArtificialSatelliteMotionPage from "@/Pages/ArtificialSatelliteMotionPage.vue";
+import LoginPage from "@/Pages/LoginPage.vue";
 import OuterApiTestPage from "@/Pages/OuterApiTestPage.vue";
 
 const routes = [
@@ -46,6 +47,15 @@ const routes = [
                 component: OuterApiTestPage,
                 meta: {
                     title: "外部API呼び出しテスト画面",
+                },
+            },
+            {
+                path: "/login",
+                name: "LoginPage",
+                component: LoginPage,
+                meta: {
+                    title: "ログインページ",
+                    requiredAuth: true,
                 },
             },
         ],

@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CalcController;
+use App\Http\Controllers\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,5 +15,7 @@ use App\Http\Controllers\CalcController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+Route::post('/login' , [LoginController::class , 'login']); // 放物運動計算API
+
 Route::get('/calcParabolicMotion' , [CalcController::class , 'parabolicMotion']); // 放物運動計算API
 Route::get('/outerApiTest' , [CalcController::class , 'outerApiTest']); // 放物運動計算API

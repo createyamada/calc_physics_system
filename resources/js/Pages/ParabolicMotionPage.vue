@@ -33,23 +33,22 @@
         />
         <div class="margin_top20">
             <CustomSelectBox
-            @change="selectChange"
-            :values="[
-                {id:0,name:'運動方程式'},
-                {id:1,name:'数値計算：オイラー法'},
-                {id:0,name:'数値計算：ルンゲ・クッタ法'},
-            ]"
-        />
+                @change="selectChange"
+                :values="[
+                    { id: 0, name: '運動方程式' },
+                    { id: 1, name: '数値計算：オイラー法' },
+                    { id: 0, name: '数値計算：ルンゲ・クッタ法' },
+                ]"
+            />
         </div>
         <div class="margin_top20">
             <CustomSubmitButton
-            type="'number'"
-            :step="'0.01'"
-            :label="'計算開始'"
-            @click="calcStart"
-        />
+                type="'number'"
+                :step="'0.01'"
+                :label="'計算開始'"
+                @click="calcStart"
+            />
         </div>
-
     </div>
 
     <LineGraph
@@ -123,7 +122,7 @@ const updateChart = async () => {
             angleRef.value,
             speedRef.value,
             stepRef.value,
-            calcTypeRef.value,
+            calcTypeRef.value
         );
         // chartDataRef.value = res.data?.position ?? [];
         let data = res.data?.position ?? [];
@@ -145,7 +144,6 @@ const selectChange = async (event) => {
     // 各情報の更新
     calcTypeRef.value = event;
 };
-
 
 // 計算開始ボタンクリック
 const calcStart = async () => {
