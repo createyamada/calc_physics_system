@@ -3,6 +3,7 @@ import MainPage from "@/Pages/MainPage.vue";
 import TopPage from "@/Pages/TopPage.vue";
 import ParabolicMotionPage from "@/Pages/ParabolicMotionPage.vue";
 import ArtificialSatelliteMotionPage from "@/Pages/ArtificialSatelliteMotionPage.vue";
+import KeplerProblem from "@/Pages/KeplerProblem.vue";
 
 const routes = [
     {
@@ -37,6 +38,14 @@ const routes = [
                 component: ArtificialSatelliteMotionPage,
                 meta: {
                     title: "人口衛星シミュレーション",
+                },
+            },
+            {
+                path: "/KeplerProblem",
+                name: "KeplerProblem",
+                component: KeplerProblem,
+                meta: {
+                    title: "ケプラー問題",
                 },
             },
         ],
