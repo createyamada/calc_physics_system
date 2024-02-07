@@ -14,5 +14,4 @@ use App\Http\Controllers\CalcController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-\Log::error('ログエラーです');
 Route::get('/calcParabolicMotion' , [CalcController::class , 'parabolicMotion']); // 放物運動計算API
