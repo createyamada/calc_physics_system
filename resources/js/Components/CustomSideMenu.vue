@@ -32,6 +32,10 @@ const CONTENTS = [
         path: "/ArtificialSatelliteMotionPage",
         label: "人口衛星シミュレーション",
     },
+    {
+        path: "/KeplerProblem",
+        label: "ケプラーの法則"
+    }
 ];
 
 const isSelect = (val) => {
