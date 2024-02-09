@@ -39,7 +39,6 @@ async function callAPI() {
             break;
         }
     }
-    
             
 }
 
