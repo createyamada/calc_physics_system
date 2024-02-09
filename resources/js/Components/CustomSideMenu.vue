@@ -35,6 +35,10 @@ const CONTENTS = [
     {
         path: "/KeplerProblem",
         label: "ケプラーの法則"
+    },
+    {
+        path: "/test",
+        label: "json送受信テスト"
     }
 ];
 

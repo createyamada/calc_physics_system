@@ -4,6 +4,7 @@ import TopPage from "@/Pages/TopPage.vue";
 import ParabolicMotionPage from "@/Pages/ParabolicMotionPage.vue";
 import ArtificialSatelliteMotionPage from "@/Pages/ArtificialSatelliteMotionPage.vue";
 import KeplerProblem from "@/Pages/KeplerProblem.vue";
+import TestPage from "@/Pages/TestPage.vue";
 
 const routes = [
     {
@@ -46,6 +47,14 @@ const routes = [
                 component: KeplerProblem,
                 meta: {
                     title: "ケプラー問題",
+                },
+            },
+            {
+                path: "/test",
+                name: "test",
+                component: TestPage,
+                meta: {
+                    title: "json送受信テスト用",
                 },
             },
         ],
