@@ -26,6 +26,30 @@ const calcParabolicMotion = (
 };
 
 /**
+ * 放物運動計算API
+ * @param {*} angle
+ * @param {*} speed
+ * @param {*} step
+ * @param {*} calc_type
+ * @returns
+ */
+const calcParabolicMotionPy = (
+    angle = "",
+    speed = "",
+    step = "",
+    calc_type = ""
+) => {
+    const params = {
+        angle: angle,
+        speed: speed,
+        step: step,
+        calc_type: calc_type,
+    };
+
+    return get("api/parabolicMotionPython", params);
+};
+
+/**
  * ログインAPI
  * @param {*} user_id
  * @param {*} password
@@ -123,5 +147,6 @@ const post = (url, params = {}) => {
 export default {
     calcParabolicMotion,
     outerApiTest,
+    calcParabolicMotionPy,
     login,
 };

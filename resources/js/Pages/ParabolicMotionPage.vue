@@ -57,6 +57,12 @@
         :chartData="chartDataRef"
     />
 
+    <LineGraph
+        :chartLabel="chartLabelPyRef"
+        :chartElemLabel="chartElemLabelPyRef"
+        :chartData="chartDataPyRef"
+    />
+
     <ErrorModal
         v-show="isErrorRef"
         :message="errorMsgRef"
@@ -83,6 +89,13 @@ const chartLabelRef = ref([]);
 const chartElemLabelRef = ref([]);
 //　グラフのデータ
 const chartDataRef = ref([]);
+
+//　グラフのラベル
+const chartLabelPyRef = ref([]);
+//　グラフのラベル
+const chartElemLabelPyRef = ref([]);
+//　グラフのデータ
+const chartDataPyRef = ref([]);
 
 // リクエストのための変数
 // 排出角度
@@ -126,7 +139,35 @@ const updateChart = async () => {
         );
         // chartDataRef.value = res.data?.position ?? [];
         let data = res.data?.position ?? [];
+        console.log("data");
+        console.log(data);
         chartDataRef.value.push(data);
+    } catch (err) {
+        console.log(err.message);
+        // isErrorRef.value = true;
+        let message = Common.axiosErrorHandle(err);
+        err.response.status !== 422
+            ? errorModalOpen(message)
+            : validateErr(message);
+    } finally {
+        isCalcBtnRef.value = false;
+    }
+};
+
+// グラフ更新
+const updatePyChart = async () => {
+    try {
+        const res = await Request.calcParabolicMotionPy(
+            angleRef.value,
+            speedRef.value,
+            stepRef.value,
+            calcTypeRef.value
+        );
+        // chartDataRef.value = res.data?.position ?? [];
+        let data = res.data ?? [];
+        console.log("dataPy");
+        console.log(data);
+        chartDataPyRef.value.push(data);
     } catch (err) {
         console.log(err.message);
         // isErrorRef.value = true;
@@ -157,6 +198,7 @@ const calcStart = async () => {
 
     // グラフ更新
     await updateChart();
+    await updatePyChart();
     isCalcBtnRef.value = true;
 };
 

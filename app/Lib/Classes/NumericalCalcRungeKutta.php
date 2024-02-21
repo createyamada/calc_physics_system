@@ -19,7 +19,7 @@ class NumericalCalcRungeKutta extends Equation
         $k1 = $v * $t;
         $k2 = (-PrefectureConst::G * ($r + $k1 / 2)) * $t;
         $k3 = (-PrefectureConst::G * ($r + $k2 / 2)) * $t;
-        $k3 = (-PrefectureConst::G * ($r + $k3)) * $t;
+        $k4 = (-PrefectureConst::G * ($r + $k3)) * $t;
         return $x + ($k1 + 2 * $k2 + 2 * $k3 + $k4) / 6;
     }
 
@@ -27,7 +27,7 @@ class NumericalCalcRungeKutta extends Equation
         $k1 = $v * $t;
         $k2 = (-PrefectureConst::G * ($r + $k1 / 2)) * $t;
         $k3 = (-PrefectureConst::G * ($r + $k2 / 2)) * $t;
-        $k3 = (-PrefectureConst::G * ($r + $k3)) * $t;
+        $k4 = (-PrefectureConst::G * ($r + $k3)) * $t;
         return $x + ($k1 + 2 * $k2 + 2 * $k3 + $k4) / 6;
     }
 }
