@@ -48,6 +48,12 @@
                 :label="'計算開始'"
                 @click="calcStart"
             />
+            <CustomSubmitButton
+                type="'number'"
+                :step="'0.01'"
+                :label="'トークン取得  '"
+                @click="getToken"
+            />
         </div>
     </div>
 
@@ -177,6 +183,16 @@ const updatePyChart = async () => {
             : validateErr(message);
     } finally {
         isCalcBtnRef.value = false;
+    }
+};
+
+// TODO: tokenテスト
+const getToken = async () => {
+    try {
+        const res = await Request.outerApiTest();
+    } catch (err) {
+        console.log("err");
+        console.log(err);
     }
 };
 

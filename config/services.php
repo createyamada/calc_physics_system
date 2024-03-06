@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    // 外部API認証情報
+    'stellaring_id' => env('STELLARING_ID'),
+    'stellaring_pass' => env('STELLARING_PASS'),
+    'stellaring_url' => env('STELLARING_API_URL'),
+
 ];
