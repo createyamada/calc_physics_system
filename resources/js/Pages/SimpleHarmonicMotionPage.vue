@@ -3,15 +3,23 @@
         <h2 class="err_msg" v-show="isValidateErrRef">
             {{ validateErrMsgRef }}
         </h2>
-
         <CustomInput
             :type="'number'"
             :step="'0.01'"
-            :name="'angle'"
-            :label="'角度'"
-            :value="angleRef"
-            :placeholder="'1~90の数値で入力'"
-            @input="angleRef = $event"
+            :name="'k'"
+            :label="'ばね定数'"
+            :value="kRef"
+            :placeholder="'1以上の数値で入力'"
+            @input="kRef = $event"
+        />
+        <CustomInput
+            :type="'number'"
+            :step="'0.01'"
+            :name="'phi'"
+            :label="'摩擦係数'"
+            :value="phiRef"
+            :placeholder="'1以上の数値で入力'"
+            @input="phiRef = $event"
         />
         <CustomInput
             :type="'number'"
@@ -51,7 +59,12 @@
         </div>
     </div>
 
-    <canvas id="canvas" width="640" height="500"></canvas>
+    <LineGraph
+        :chartLabel="chartLabelRef"
+        :chartElemLabel="chartElemLabelRef"
+        :chartData="chartDataRef"
+    />
+
     <LineGraph
         :chartLabel="chartLabelPyRef"
         :chartElemLabel="chartElemLabelPyRef"
@@ -93,8 +106,10 @@ const chartElemLabelPyRef = ref([]);
 const chartDataPyRef = ref([]);
 
 // リクエストのための変数
-// 排出角度
-const angleRef = ref("");
+// ばね定数
+const kRef = ref("");
+// 摩擦係数
+const phiRef = ref("");
 // 初速度
 const speedRef = ref("");
 // 計測間隔
@@ -124,21 +139,21 @@ const validateErrMsgRef = ref("");
 // });
 
 // グラフ更新
-const updatePyChart = async () => {
+const updateChart = async () => {
     try {
-        const res = await Request.calcParabolicMotionPy(
-            angleRef.value,
+        const res = await Request.calcSimpleHarmonicMotion(
+            kRef.value,
+            phiRef.value,
+            speedRef.value,
             speedRef.value,
             stepRef.value,
             calcTypeRef.value
         );
         // chartDataRef.value = res.data?.position ?? [];
-        let data = res.data ?? [];
-        console.log("dataPy");
+        let data = res.data?.position ?? [];
+        console.log("data");
         console.log(data);
-        chartDataPyRef.value.push(data);
-        // アニメーションの開始
-        animation(data);
+        chartDataRef.value.push(data);
     } catch (err) {
         console.log(err.message);
         // isErrorRef.value = true;
@@ -149,74 +164,6 @@ const updatePyChart = async () => {
     } finally {
         isCalcBtnRef.value = false;
     }
-};
-const animation = () => {
-    const canvas = document.getElementById("canvas"),
-        ctx = canvas.getContext("2d");
-
-    const dpr = window.devicePixelRatio || 1,
-        width = canvas.width,
-        height = canvas.height;
-
-    // Canvasをピクセル比で拡大
-    canvas.width *= dpr;
-    canvas.height *= dpr;
-    // CSSで元のサイズに戻す
-    canvas.style.width = width + "px";
-    canvas.style.height = height + "px";
-    // Canvasの描画自体を拡大
-    ctx.scale(dpr, dpr);
-
-    // y座標を反転
-    ctx.scale(1, -1);
-    // y軸に沿って高さ分下にずらす
-    ctx.translate(0, -height);
-
-    let x = 0,
-        y = 0, // 点の位置 [m]
-        vx = 10, // X方向の速さ [m/s]
-        vy = 25, // Y方向の速さ [m/s]
-        lastTime, // 前回の呼び出し時間 [ms]
-        stop = false; // 停止判定
-
-    const g = -9.8, // 重力加速度
-        scale = 0.1; // 1px当たりのメートル
-
-    const update = (dt) => {
-        x += vx * dt;
-        y += vy * dt;
-        y = Math.max(y, 0);
-        /* vx += 0; 今回は横方向の加速度はない */
-        vy += g * dt;
-
-        if (dt && y === 0) {
-            stop = true; // y = 0 なら停止（ただし初回は無視）
-        }
-    };
-
-    const draw = () => {
-        // 画面の消去
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // 点の描画
-        ctx.beginPath();
-        ctx.arc(x / scale, y / scale, 10, 0, Math.PI * 2);
-        ctx.fill();
-    };
-
-    const tick = (time) => {
-        if (!lastTime) lastTime = time;
-        const dt = (time - lastTime) / 1000; // 経過時間 [s]
-
-        update(dt);
-        draw();
-
-        if (!stop) {
-            lastTime = time;
-            requestAnimationFrame(tick);
-        }
-    };
-    requestAnimationFrame(tick);
 };
 
 // セレクトボックスチェンジ
@@ -236,7 +183,7 @@ const calcStart = async () => {
     isValidateErrRef.value = false;
 
     // グラフ更新
-    await updatePyChart();
+    await updateChart();
     isCalcBtnRef.value = true;
 };
 

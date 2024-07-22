@@ -3,6 +3,7 @@ import MainPage from "@/Pages/MainPage.vue";
 import TopPage from "@/Pages/TopPage.vue";
 import ParabolicMotionPage from "@/Pages/ParabolicMotionPage.vue";
 import ArtificialSatelliteMotionPage from "@/Pages/ArtificialSatelliteMotionPage.vue";
+import SimpleHarmonicMotionPage from "@/Pages/SimpleHarmonicMotionPage.vue";
 import LoginPage from "@/Pages/LoginPage.vue";
 import OuterApiTestPage from "@/Pages/OuterApiTestPage.vue";
 
@@ -27,10 +28,18 @@ const routes = [
             },
             {
                 path: "/parabolicMotion",
-                name: "parabolicMotion",
+                name: "ParabolicMotion",
                 component: ParabolicMotionPage,
                 meta: {
-                    title: "放物運動計算",
+                    title: "放物運動シミュレーション",
+                },
+            },
+            {
+                path: "/simpleHarmonicMotion",
+                name: "SimpleHarmonicMotion",
+                component: SimpleHarmonicMotionPage,
+                meta: {
+                    title: "単振動シミュレーション",
                 },
             },
             {

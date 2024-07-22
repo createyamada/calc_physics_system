@@ -41,7 +41,10 @@ const router = useRouter();
 
 // ボタンクリックイベント
 const login = async () => {
-    const res = await Request.login(userIdRef.value, passwordRef.value);
+    //TODO:ログインのトークン取得のために一時的に設置
+    const res = await Request.outerApiTest();
+    // TODO:本来の形
+    // const res = await Request.login(userIdRef.value, passwordRef.value);
     // ログイン成功の場合
     if (res.status === 200) {
         // ローカルストレージに認証情報を保存

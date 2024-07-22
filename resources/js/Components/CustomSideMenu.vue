@@ -29,8 +29,16 @@
 const CONTENTS = [
     { path: "/parabolicMotion", label: "放物運動計算" },
     {
+        path: "/simpleHarmonicMotion",
+        label: "単振動計算",
+    },
+    {
         path: "/artificialSatelliteMotion",
         label: "人口衛星シミュレーション",
+    },
+    {
+        path: "/login",
+        label: "ログイン",
     },
     {
         path: "/outerApiTest",

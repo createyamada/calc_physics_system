@@ -50,6 +50,33 @@ const calcParabolicMotionPy = (
 };
 
 /**
+ * 単振動計算API
+ * @param {*} k
+ * @param {*} phi
+ * @param {*} speed
+ * @param {*} step
+ * @param {*} calc_type
+ * @returns
+ */
+const calcSimpleHarmonicMotion = (
+    k = "",
+    phi = "",
+    speed = "",
+    step = "",
+    calc_type = ""
+) => {
+    const params = {
+        k: k,
+        phi: phi,
+        speed: speed,
+        step: step,
+        calc_type: calc_type,
+    };
+
+    return get("api/simpleHarmonicMotion", params);
+};
+
+/**
  * ログインAPI
  * @param {*} user_id
  * @param {*} password
@@ -146,6 +173,7 @@ const post = (url, params = {}) => {
 
 export default {
     calcParabolicMotion,
+    calcSimpleHarmonicMotion,
     outerApiTest,
     calcParabolicMotionPy,
     login,
