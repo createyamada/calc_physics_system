@@ -16,7 +16,7 @@ class CalcController extends Controller
      * @param ParabolicMotionRequest $request
      * @return Object $result
      */
-    public function parabolicMotionPython(ParabolicMotionRequest $request): Object
+    public function parabolicMotion(ParabolicMotionRequest $request): Object
     {
         // STELLARINGのURLを取得
         $url = env('STELLARING_API_URL') . '/api/equationOfMotion/';

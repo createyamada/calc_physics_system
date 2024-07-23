@@ -22,31 +22,7 @@ const calcParabolicMotion = (
         calc_type: calc_type,
     };
 
-    return get("api/calcParabolicMotion", params);
-};
-
-/**
- * 放物運動計算API
- * @param {*} angle
- * @param {*} speed
- * @param {*} step
- * @param {*} calc_type
- * @returns
- */
-const calcParabolicMotionPy = (
-    angle = "",
-    speed = "",
-    step = "",
-    calc_type = ""
-) => {
-    const params = {
-        angle: angle,
-        speed: speed,
-        step: step,
-        calc_type: calc_type,
-    };
-
-    return get("api/parabolicMotionPython", params);
+    return get("api/parabolicMotion", params);
 };
 
 /**
@@ -175,6 +151,5 @@ export default {
     calcParabolicMotion,
     calcSimpleHarmonicMotion,
     outerApiTest,
-    calcParabolicMotionPy,
     login,
 };

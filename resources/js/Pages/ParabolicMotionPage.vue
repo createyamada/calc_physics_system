@@ -51,12 +51,14 @@
         </div>
     </div>
 
-    <canvas id="canvas" width="640" height="500"></canvas>
+    <canvas id="canvas" width="1020" height="500"></canvas>
     <LineGraph
-        :chartLabel="chartLabelPyRef"
-        :chartElemLabel="chartElemLabelPyRef"
-        :chartData="chartDataPyRef"
+        :chartLabel="chartLabelRef"
+        :chartElemLabel="chartElemLabelRef"
+        :chartData="chartDataRef"
     />
+    <h2>最高到達点：{{ maxHeightRef }}</h2>
+    <h2>水平到達距離：{{ maxWidthRef }}</h2>
 
     <ErrorModal
         v-show="isErrorRef"
@@ -85,13 +87,6 @@ const chartElemLabelRef = ref([]);
 //　グラフのデータ
 const chartDataRef = ref([]);
 
-//　グラフのラベル
-const chartLabelPyRef = ref([]);
-//　グラフのラベル
-const chartElemLabelPyRef = ref([]);
-//　グラフのデータ
-const chartDataPyRef = ref([]);
-
 // リクエストのための変数
 // 排出角度
 const angleRef = ref("");
@@ -104,6 +99,12 @@ const calcTypeRef = ref(0);
 
 // 連打防止用ボタンフラグ
 const isCalcBtnRef = ref(true);
+
+// 結果表示用変数
+// 最高到達点
+const maxHeightRef = ref(0);
+// 水平到達距離
+const maxWidthRef = ref(0);
 
 // エラー時の変数
 // エラーフラグ
@@ -124,9 +125,9 @@ const validateErrMsgRef = ref("");
 // });
 
 // グラフ更新
-const updatePyChart = async () => {
+const updateChart = async () => {
     try {
-        const res = await Request.calcParabolicMotionPy(
+        const res = await Request.calcParabolicMotion(
             angleRef.value,
             speedRef.value,
             stepRef.value,
@@ -134,11 +135,18 @@ const updatePyChart = async () => {
         );
         // chartDataRef.value = res.data?.position ?? [];
         let data = res.data ?? [];
+
         console.log("dataPy");
-        console.log(data);
-        chartDataPyRef.value.push(data);
+        console.log(data["datas"]);
+        console.log("height");
+        console.log(data["maxHeight"]);
+        console.log("width");
+        console.log(data["maxWidth"]);
+        chartDataRef.value.push(data["datas"]);
+        maxHeightRef.value = data["maxHeight"];
+        maxWidthRef.value = data["maxWidth"];
         // アニメーションの開始
-        animation(data);
+        animation(data["datas"]);
     } catch (err) {
         console.log(err.message);
         // isErrorRef.value = true;
@@ -150,7 +158,9 @@ const updatePyChart = async () => {
         isCalcBtnRef.value = false;
     }
 };
-const animation = () => {
+
+// アニメーション描画
+const animation = (data) => {
     const canvas = document.getElementById("canvas"),
         ctx = canvas.getContext("2d");
 
@@ -172,25 +182,22 @@ const animation = () => {
     // y軸に沿って高さ分下にずらす
     ctx.translate(0, -height);
 
+    // 点の位置 [m]
     let x = 0,
-        y = 0, // 点の位置 [m]
-        vx = 10, // X方向の速さ [m/s]
-        vy = 25, // Y方向の速さ [m/s]
-        lastTime, // 前回の呼び出し時間 [ms]
-        stop = false; // 停止判定
+        y = 0,
+        // 位置情報データのインデックス管理用
+        index = 0;
 
-    const g = -9.8, // 重力加速度
-        scale = 0.1; // 1px当たりのメートル
+    const update = () => {
+        // インデックスをインクリメント
+        x = data[index]["x"];
+        y = data[index]["y"];
 
-    const update = (dt) => {
-        x += vx * dt;
-        y += vy * dt;
-        y = Math.max(y, 0);
-        /* vx += 0; 今回は横方向の加速度はない */
-        vy += g * dt;
-
-        if (dt && y === 0) {
-            stop = true; // y = 0 なら停止（ただし初回は無視）
+        if (index !== 0 && (y <= 0 || y === "undefined")) {
+            // 初期値以外で地面に着地した場合変数初期化
+            index = 0;
+        } else {
+            index++;
         }
     };
 
@@ -200,21 +207,14 @@ const animation = () => {
 
         // 点の描画
         ctx.beginPath();
-        ctx.arc(x / scale, y / scale, 10, 0, Math.PI * 2);
+        ctx.arc(x, y, 10, 0, Math.PI * 2);
         ctx.fill();
     };
 
-    const tick = (time) => {
-        if (!lastTime) lastTime = time;
-        const dt = (time - lastTime) / 1000; // 経過時間 [s]
-
-        update(dt);
+    const tick = () => {
+        update();
         draw();
-
-        if (!stop) {
-            lastTime = time;
-            requestAnimationFrame(tick);
-        }
+        requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
 };
@@ -236,7 +236,7 @@ const calcStart = async () => {
     isValidateErrRef.value = false;
 
     // グラフ更新
-    await updatePyChart();
+    await updateChart();
     isCalcBtnRef.value = true;
 };
 
