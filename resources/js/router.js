@@ -3,7 +3,7 @@ import MainPage from "@/Pages/MainPage.vue";
 import TopPage from "@/Pages/TopPage.vue";
 import ParabolicMotionPage from "@/Pages/ParabolicMotionPage.vue";
 import ArtificialSatelliteMotionPage from "@/Pages/ArtificialSatelliteMotionPage.vue";
-import SimpleHarmonicMotionPage from "@/Pages/SimpleHarmonicMotionPage.vue";
+import SimpleHarmonizeMotionPage from "@/Pages/simpleHarmonizeMotionPage.vue";
 import LoginPage from "@/Pages/LoginPage.vue";
 import OuterApiTestPage from "@/Pages/OuterApiTestPage.vue";
 
@@ -35,9 +35,9 @@ const routes = [
                 },
             },
             {
-                path: "/simpleHarmonicMotion",
-                name: "SimpleHarmonicMotion",
-                component: SimpleHarmonicMotionPage,
+                path: "/simpleHarmonizeMotion",
+                name: "SimpleHarmonizeMotion",
+                component: SimpleHarmonizeMotionPage,
                 meta: {
                     title: "単振動シミュレーション",
                 },

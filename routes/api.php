@@ -17,5 +17,6 @@ use App\Http\Controllers\LoginController;
 */
 Route::post('/login' , [LoginController::class , 'login']); // ログインAPI
 
-Route::get('/parabolicMotion' , [CalcController::class , 'parabolicMotion']); // 放物運動計算API(Python)
+Route::get('/parabolicMotion' , [CalcController::class , 'parabolicMotion']); // 放物運動計算API
+Route::get('/simpleHarmonizeMotion' , [CalcController::class , 'simpleHarmonizeMotion']); // 単振動計算API
 Route::get('/outerApiTest' , [CalcController::class , 'outerApiTest']); // 放物運動計算API

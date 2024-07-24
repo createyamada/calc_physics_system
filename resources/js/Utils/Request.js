@@ -28,14 +28,16 @@ const calcParabolicMotion = (
 /**
  * 単振動計算API
  * @param {*} k
+ * @param {*} m
  * @param {*} phi
  * @param {*} speed
  * @param {*} step
  * @param {*} calc_type
  * @returns
  */
-const calcSimpleHarmonicMotion = (
+const calcSimpleHarmonizeMotion = (
     k = "",
+    m = "",
     phi = "",
     speed = "",
     step = "",
@@ -43,13 +45,15 @@ const calcSimpleHarmonicMotion = (
 ) => {
     const params = {
         k: k,
+        m: m,
+        x: x,
         phi: phi,
         speed: speed,
         step: step,
         calc_type: calc_type,
     };
 
-    return get("api/simpleHarmonicMotion", params);
+    return get("api/simpleHarmonizeMotion", params);
 };
 
 /**
@@ -149,7 +153,7 @@ const post = (url, params = {}) => {
 
 export default {
     calcParabolicMotion,
-    calcSimpleHarmonicMotion,
+    calcSimpleHarmonizeMotion,
     outerApiTest,
     login,
 };

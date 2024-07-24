@@ -15,6 +15,24 @@
         <CustomInput
             :type="'number'"
             :step="'0.01'"
+            :name="'m'"
+            :label="'小球を質量'"
+            :value="mRef"
+            :placeholder="'1以上の数値で入力'"
+            @input="mRef = $event"
+        />
+        <CustomInput
+            :type="'number'"
+            :step="'0.01'"
+            :name="'m'"
+            :label="'自然長からの位置'"
+            :value="xRef"
+            :placeholder="'1以上の数値で入力'"
+            @input="xRef = $event"
+        />
+        <CustomInput
+            :type="'number'"
+            :step="'0.01'"
             :name="'phi'"
             :label="'摩擦係数'"
             :value="phiRef"
@@ -58,6 +76,7 @@
             />
         </div>
     </div>
+    <canvas id="canvas" width="640" height="500"></canvas>
 
     <LineGraph
         :chartLabel="chartLabelRef"
@@ -108,6 +127,10 @@ const chartDataPyRef = ref([]);
 // リクエストのための変数
 // ばね定数
 const kRef = ref("");
+// 質量
+const mRef = ref("");
+// 自然長からの位置
+const xRef = ref("");
 // 摩擦係数
 const phiRef = ref("");
 // 初速度
@@ -141,19 +164,19 @@ const validateErrMsgRef = ref("");
 // グラフ更新
 const updateChart = async () => {
     try {
-        const res = await Request.calcSimpleHarmonicMotion(
+        const res = await Request.calcSimpleHarmonizeMotion(
             kRef.value,
+            mRef.value,
+            xRef.value,
             phiRef.value,
-            speedRef.value,
             speedRef.value,
             stepRef.value,
             calcTypeRef.value
         );
         // chartDataRef.value = res.data?.position ?? [];
-        let data = res.data?.position ?? [];
-        console.log("data");
-        console.log(data);
-        chartDataRef.value.push(data);
+        let data = res.data ?? [];
+        chartDataRef.value.push(data["datas"]);
+        animation(data["datas"]);
     } catch (err) {
         console.log(err.message);
         // isErrorRef.value = true;
@@ -164,6 +187,69 @@ const updateChart = async () => {
     } finally {
         isCalcBtnRef.value = false;
     }
+};
+
+// アニメーション描画
+const animation = (data) => {
+    const canvas = document.getElementById("canvas"),
+        ctx = canvas.getContext("2d");
+
+    const dpr = window.devicePixelRatio || 1,
+        width = canvas.width,
+        height = canvas.height;
+
+    // Canvasをピクセル比で拡大
+    canvas.width *= dpr;
+    canvas.height *= dpr;
+    // CSSで元のサイズに戻す
+    canvas.style.width = width + "px";
+    canvas.style.height = height + "px";
+    // Canvasの描画自体を拡大
+    ctx.scale(dpr, dpr);
+
+    // y座標を反転
+    ctx.scale(1, -1);
+    // y軸に沿って高さ分下にずらす
+    ctx.translate(0, -height);
+
+    console.log("data.length");
+    console.log(data.length);
+
+    // 点の位置 [m]
+    let x = 0;
+    // 位置情報データのインデックス管理用
+    let index = 0;
+
+    const update = () => {
+        // インデックスをインクリメント
+        x = data[index]["y"];
+        console.log(x);
+        console.log(index);
+
+        if (index === data.length - 1) {
+            // 配列が最後まで終了したらインデックスを初期化
+            index = 0;
+        } else {
+            index++;
+        }
+    };
+
+    const draw = () => {
+        // 画面の消去
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // 点の描画
+        ctx.beginPath();
+        ctx.arc(x, canvas.height / 2, 10, 0, Math.PI * 2);
+        ctx.fill();
+    };
+
+    const tick = () => {
+        update();
+        draw();
+        requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
 };
 
 // セレクトボックスチェンジ

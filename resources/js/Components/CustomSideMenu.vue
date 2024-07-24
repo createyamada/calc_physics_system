@@ -29,7 +29,7 @@
 const CONTENTS = [
     { path: "/parabolicMotion", label: "放物運動計算" },
     {
-        path: "/simpleHarmonicMotion",
+        path: "/simpleHarmonizeMotion",
         label: "単振動計算",
     },
     {

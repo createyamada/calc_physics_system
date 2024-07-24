@@ -136,12 +136,6 @@ const updateChart = async () => {
         // chartDataRef.value = res.data?.position ?? [];
         let data = res.data ?? [];
 
-        console.log("dataPy");
-        console.log(data["datas"]);
-        console.log("height");
-        console.log(data["maxHeight"]);
-        console.log("width");
-        console.log(data["maxWidth"]);
         chartDataRef.value.push(data["datas"]);
         maxHeightRef.value = data["maxHeight"];
         maxWidthRef.value = data["maxWidth"];
