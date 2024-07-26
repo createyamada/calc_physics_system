@@ -45,10 +45,11 @@ const login = async () => {
     const res = await Request.outerApiTest();
     // TODO:本来の形
     // const res = await Request.login(userIdRef.value, passwordRef.value);
+    console.log(res);
     // ログイン成功の場合
     if (res.status === 200) {
         // ローカルストレージに認証情報を保存
-        window.localStorage.setItem(["user_id"], [userIdRef.value]);
+        // window.localStorage.setItem(["user_id"], [userIdRef.value]);
         // window.localStorage.setItem(["login"], 1);
         // メイン画面に遷移
         router.push("/");

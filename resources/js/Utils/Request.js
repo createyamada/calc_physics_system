@@ -77,6 +77,7 @@ const login = (user_id = "", password = "") => {
  * @returns
  */
 const outerApiTest = () => {
+    console.log("auth発生");
     return get("api/outerApiTest");
 };
 

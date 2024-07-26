@@ -9,9 +9,16 @@ use App\Lib\Classes\EquationOfMotion;
 use App\Lib\Classes\NumericalCalcEuler;
 use App\Lib\Classes\NumericalCalcRungeKutta;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Session;
+use App\Traits\SessionTrait;
+use App\Traits\TokenTrait;
 
 class CalcController extends Controller
 {
+
+    use SessionTrait;
+    use TokenTrait;
+
     /**
      * 放物運動計算
      * @param ParabolicMotionRequest $request
@@ -78,30 +85,11 @@ class CalcController extends Controller
      * @param Request $request
      * @return Object $result
      */
-    public function outerApiTest(Request $request): Object
+    public function outerApiTest(Request $request): String
     {
-        \Log::debug('テスト');
-
-        $param = [
-            "username"=> config('services.stellaring_id'),
-            "password"=> config('services.stellaring_pass'),
-        ];
-
-        $headers = [
-            'Content-Type' => 'application/x-www-form-urlencoded',
-        ];
-
-        $url = config('services.stellaring_url') . '/api/auth/token';
-        $result = Http::withHeaders($headers)->post($url,$param);
-        \Log::debug($result); 
-
-        if ($response->ok()) {
-            // リクエスト成功
-
-        } else {
-            // 失敗
-        }
-
-        return $result;
+        Session::flush();
+        $this->getToken();
+        $this->checkSession();
+        return '成功している';
     }
 }
