@@ -139,6 +139,21 @@ const speedRef = ref("");
 const stepRef = ref("");
 // 計算方法
 const calcTypeRef = ref(0);
+// 小球の情報
+const currentXRef = ref(0);
+const radiusRef = ref(10);
+
+// キャンバス情報
+const canvasWidthRef = ref(0);
+const canvasHeightRef = ref(0);
+const canvasRef = ref(null);
+const ctxRef = ref(null);
+
+// 位置情報
+const pointRef = ref({});
+
+// クリックフラグ
+const obfClickFlagRef = ref(false);
 
 // 連打防止用ボタンフラグ
 const isCalcBtnRef = ref(true);
@@ -154,12 +169,42 @@ const isValidateErrRef = ref(false);
 const validateErrMsgRef = ref("");
 
 // マウント前処理
-// onMounted(async () => {
-//     try {
-//     } catch (err) {
-//         console.log(err);
-//     }
-// });
+onMounted(async () => {
+    try {
+        canvasRef.value = document.getElementById("canvas");
+        ctxRef.value = canvasRef.value.getContext("2d");
+
+        canvasRef.value.addEventListener("mouseup", (e) => {
+            console.log("mouseup");
+            draw(false, false);
+        });
+
+        canvasRef.value.addEventListener("mousedown", (e) => {
+            setNowPosition(e);
+            if (
+                pointRef.value["x"] < currentXRef.value + radiusRef.value &&
+                pointRef.value["x"] > currentXRef.value - radiusRef.value &&
+                pointRef.value["y"] < canvas.height / 2 + radiusRef.value &&
+                pointRef.value["y"] > canvas.height / 2 - radiusRef.value
+            ) {
+                console.log("mousedown");
+                draw(true, true);
+            }
+        });
+
+        canvasRef.value.addEventListener("mousemove", (e) => {
+            console.log("mousemove");
+            //　クリック状態であれば処理する
+            if (obfClickFlagRef.value) {
+                setNowPosition(e);
+                draw(true, true);
+            }
+        });
+        iniDraw();
+    } catch (err) {
+        console.log(err);
+    }
+});
 
 // グラフ更新
 const updateChart = async () => {
@@ -191,9 +236,6 @@ const updateChart = async () => {
 
 // アニメーション描画
 const animation = (data) => {
-    const canvas = document.getElementById("canvas"),
-        ctx = canvas.getContext("2d");
-
     const dpr = window.devicePixelRatio || 1,
         width = canvas.width,
         height = canvas.height;
@@ -234,15 +276,15 @@ const animation = (data) => {
         }
     };
 
-    const draw = () => {
-        // 画面の消去
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // const draw = () => {
+    //     // 画面の消去
+    //     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // 点の描画
-        ctx.beginPath();
-        ctx.arc(x, canvas.height / 2, 10, 0, Math.PI * 2);
-        ctx.fill();
-    };
+    //     // 点の描画
+    //     ctx.beginPath();
+    //     ctx.arc(x, canvas.height / 2, 10, 0, Math.PI * 2);
+    //     ctx.fill();
+    // };
 
     const tick = () => {
         update();
@@ -250,6 +292,83 @@ const animation = (data) => {
         requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
+};
+
+/**
+ * キャンバスオブジェクト移動後再描画
+ * @param {boolen} changeFlag 描画位置移動フラグ
+ * @param {boolen} clickFlag クリックフラグ
+ */
+const draw = (changeFlag, clickFlag) => {
+    if (changeFlag) {
+        currentXRef.value = pointRef.value["x"];
+    }
+
+    if (clickFlag) {
+        ctxRef.value.fillStyle = "red";
+    } else {
+        ctxRef.value.fillStyle = "blue";
+    }
+
+    obfClickFlagRef.value = clickFlag;
+
+    // 画面の消去
+    ctxRef.value.clearRect(0, 0, canvasWidthRef.value, canvasHeightRef.value);
+
+    // 点の描画
+    ctxRef.value.beginPath();
+    ctxRef.value.arc(
+        currentXRef.value,
+        canvasHeightRef.value / 2,
+        radiusRef.value,
+        0,
+        Math.PI * 2
+    );
+    ctxRef.value.fill();
+};
+
+/**
+ * キャンバス初期表示
+ * @param {void}
+ */
+const iniDraw = () => {
+    console.log("iniDraw");
+
+    const dpr = window.devicePixelRatio || 1;
+    canvasWidthRef.value = canvasRef.value.width;
+    canvasHeightRef.value = canvasRef.value.height;
+
+    // Canvasをピクセル比で拡大
+    canvasRef.value.width *= dpr;
+    canvasRef.value.height *= dpr;
+    // CSSで元のサイズに戻す
+    canvasRef.value.style.width = canvasWidthRef.value + "px";
+    canvasRef.value.style.height = canvasHeightRef.value + "px";
+    // Canvasの描画自体を拡大
+    ctxRef.value.scale(dpr, dpr);
+
+    // y座標を反転
+    ctxRef.value.scale(1, -1);
+    // y軸に沿って高さ分下にずらす
+    ctxRef.value.translate(0, -canvasHeightRef.value);
+
+    currentXRef.value = canvas.width / 2;
+
+    draw(false, false);
+    console.log("iniDrawfinish");
+};
+
+/**
+ * クリック現在位置を取得
+ * @param {Object} eventObj
+ */
+const setNowPosition = (eventObj) => {
+    // マウスの座標をCanvas内の座標とあわせるため
+    const rect = canvas.getBoundingClientRect();
+    pointRef.value = {
+        x: eventObj.clientX - rect.left,
+        y: eventObj.clientY - rect.top,
+    };
 };
 
 // セレクトボックスチェンジ
