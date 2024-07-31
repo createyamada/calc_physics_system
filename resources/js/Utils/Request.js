@@ -38,6 +38,7 @@ const calcParabolicMotion = (
 const calcSimpleHarmonizeMotion = (
     k = "",
     m = "",
+    x = "",
     phi = "",
     speed = "",
     step = "",

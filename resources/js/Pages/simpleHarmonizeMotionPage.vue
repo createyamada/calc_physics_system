@@ -22,14 +22,17 @@
             @input="mRef = $event"
         />
         <CustomInput
-            :type="'number'"
+            v-if="inputResetFlagRef"
+            type="'number'"
             :step="'0.01'"
-            :name="'m'"
+            :name="'x'"
             :label="'自然長からの位置'"
-            :value="xRef"
+            v-model="xRef"
             :placeholder="'1以上の数値で入力'"
             @input="xRef = $event"
+            :disableFlag="true"
         />
+        {{ xRef }}
         <CustomInput
             :type="'number'"
             :step="'0.01'"
@@ -99,7 +102,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, nextTick } from "vue";
 import Request from "@/Utils/Request";
 import LineGraph from "@/Components/Graphs/LineGraph.vue";
 import CustomInput from "@/Components/CustomInput.vue";
@@ -130,7 +133,7 @@ const kRef = ref("");
 // 質量
 const mRef = ref("");
 // 自然長からの位置
-const xRef = ref("");
+const xRef = ref(0);
 // 摩擦係数
 const phiRef = ref("");
 // 初速度
@@ -154,7 +157,8 @@ const pointRef = ref({});
 
 // クリックフラグ
 const obfClickFlagRef = ref(false);
-
+// インプットリセットフラグ
+const inputResetFlagRef = ref(true);
 // 連打防止用ボタンフラグ
 const isCalcBtnRef = ref(true);
 
@@ -174,6 +178,8 @@ onMounted(async () => {
         canvasRef.value = document.getElementById("canvas");
         ctxRef.value = canvasRef.value.getContext("2d");
 
+        iniDraw();
+
         canvasRef.value.addEventListener("mouseup", (e) => {
             console.log("mouseup");
             draw(false, false);
@@ -192,15 +198,17 @@ onMounted(async () => {
             }
         });
 
-        canvasRef.value.addEventListener("mousemove", (e) => {
+        canvasRef.value.addEventListener("mousemove", async (e) => {
             console.log("mousemove");
             //　クリック状態であれば処理する
             if (obfClickFlagRef.value) {
                 setNowPosition(e);
                 draw(true, true);
+                inputResetFlagRef.value = false;
+                await nextTick();
+                inputResetFlagRef.value = true;
             }
         });
-        iniDraw();
     } catch (err) {
         console.log(err);
     }
@@ -236,24 +244,6 @@ const updateChart = async () => {
 
 // アニメーション描画
 const animation = (data) => {
-    const dpr = window.devicePixelRatio || 1,
-        width = canvas.width,
-        height = canvas.height;
-
-    // Canvasをピクセル比で拡大
-    canvas.width *= dpr;
-    canvas.height *= dpr;
-    // CSSで元のサイズに戻す
-    canvas.style.width = width + "px";
-    canvas.style.height = height + "px";
-    // Canvasの描画自体を拡大
-    ctx.scale(dpr, dpr);
-
-    // y座標を反転
-    ctx.scale(1, -1);
-    // y軸に沿って高さ分下にずらす
-    ctx.translate(0, -height);
-
     console.log("data.length");
     console.log(data.length);
 
@@ -266,7 +256,7 @@ const animation = (data) => {
         // インデックスをインクリメント
         x = data[index]["y"];
         console.log(x);
-        console.log(index);
+        // console.log(index);
 
         if (index === data.length - 1) {
             // 配列が最後まで終了したらインデックスを初期化
@@ -276,19 +266,30 @@ const animation = (data) => {
         }
     };
 
-    // const draw = () => {
-    //     // 画面の消去
-    //     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const animationDraw = () => {
+        // 画面の消去
+        ctxRef.value.clearRect(
+            0,
+            0,
+            canvasWidthRef.value,
+            canvasHeightRef.value
+        );
 
-    //     // 点の描画
-    //     ctx.beginPath();
-    //     ctx.arc(x, canvas.height / 2, 10, 0, Math.PI * 2);
-    //     ctx.fill();
-    // };
+        // 点の描画
+        ctxRef.value.beginPath();
+        ctxRef.value.arc(
+            Number(canvasWidthRef.value / 2 + x),
+            canvasHeightRef.value / 2,
+            radiusRef.value,
+            0,
+            Math.PI * 2
+        );
+        ctxRef.value.fill();
+    };
 
     const tick = () => {
         update();
-        draw();
+        animationDraw();
         requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
@@ -369,6 +370,13 @@ const setNowPosition = (eventObj) => {
         x: eventObj.clientX - rect.left,
         y: eventObj.clientY - rect.top,
     };
+    xRef.value = String(
+        Number(xRef.value) + Number(pointRef.value["x"] - currentXRef.value)
+    );
+    // xRef.value =
+    //     Number(xRef.value) + Number(pointRef.value["x"] - currentXRef.value);
+    console.log("currentx");
+    console.log(xRef.value);
 };
 
 // セレクトボックスチェンジ
