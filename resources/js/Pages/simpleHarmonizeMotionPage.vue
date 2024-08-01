@@ -30,7 +30,7 @@
             v-model="xRef"
             :placeholder="'1以上の数値で入力'"
             @input="xRef = $event"
-            :disableFlag="true"
+            :disableFlag="false"
         />
         {{ xRef }}
         <CustomInput
@@ -102,7 +102,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from "vue";
+import { ref, onMounted, nextTick, watch } from "vue";
 import Request from "@/Utils/Request";
 import LineGraph from "@/Components/Graphs/LineGraph.vue";
 import CustomInput from "@/Components/CustomInput.vue";
@@ -145,12 +145,14 @@ const calcTypeRef = ref(0);
 // 小球の情報
 const currentXRef = ref(0);
 const radiusRef = ref(10);
+const initPositionRef = ref(0);
 
 // キャンバス情報
 const canvasWidthRef = ref(0);
 const canvasHeightRef = ref(0);
 const canvasRef = ref(null);
 const ctxRef = ref(null);
+const lineWidthRef = ref(10);
 
 // 位置情報
 const pointRef = ref({});
@@ -178,6 +180,7 @@ onMounted(async () => {
         canvasRef.value = document.getElementById("canvas");
         ctxRef.value = canvasRef.value.getContext("2d");
 
+        //　キャンバスオブジェクトに小球初期表示
         iniDraw();
 
         canvasRef.value.addEventListener("mouseup", (e) => {
@@ -213,6 +216,20 @@ onMounted(async () => {
         console.log(err);
     }
 });
+
+// 自然長からの位置変数を監視
+watch(
+    () => xRef.value,
+    (val) => {
+        if (!obfClickFlagRef.value) {
+            // テキストボックスからの入力であればキャンバスの位置を変更する
+            console.log(`count is: ${val}`);
+            currentXRef.value = initPositionRef.value;
+            currentXRef.value = Number(currentXRef.value) + Number(val);
+            draw(false, false);
+        }
+    }
+);
 
 // グラフ更新
 const updateChart = async () => {
@@ -278,7 +295,7 @@ const animation = (data) => {
         // 点の描画
         ctxRef.value.beginPath();
         ctxRef.value.arc(
-            Number(canvasWidthRef.value / 2 + x),
+            Number(initPositionRef.value + x),
             canvasHeightRef.value / 2,
             radiusRef.value,
             0,
@@ -316,6 +333,10 @@ const draw = (changeFlag, clickFlag) => {
     // 画面の消去
     ctxRef.value.clearRect(0, 0, canvasWidthRef.value, canvasHeightRef.value);
 
+    // 線の基本スタイル
+    ctxRef.value.strokeStyle = "#666";
+    ctxRef.value.lineWidth = lineWidthRef.value;
+
     // 点の描画
     ctxRef.value.beginPath();
     ctxRef.value.arc(
@@ -325,7 +346,21 @@ const draw = (changeFlag, clickFlag) => {
         0,
         Math.PI * 2
     );
+    ctxRef.value.closePath();
     ctxRef.value.fill();
+
+    // 線の描画
+    ctxRef.value.beginPath();
+    ctxRef.value.moveTo(
+        0,
+        canvasHeightRef.value / 2 - (radiusRef.value + lineWidthRef.value / 2)
+    );
+    ctxRef.value.lineTo(
+        canvasWidthRef.value,
+        canvasHeightRef.value / 2 - (radiusRef.value + lineWidthRef.value / 2)
+    );
+    ctxRef.value.closePath();
+    ctxRef.value.stroke();
 };
 
 /**
@@ -353,7 +388,7 @@ const iniDraw = () => {
     // y軸に沿って高さ分下にずらす
     ctxRef.value.translate(0, -canvasHeightRef.value);
 
-    currentXRef.value = canvas.width / 2;
+    currentXRef.value = initPositionRef.value = canvasWidthRef.value / 4;
 
     draw(false, false);
     console.log("iniDrawfinish");
@@ -373,8 +408,7 @@ const setNowPosition = (eventObj) => {
     xRef.value = String(
         Number(xRef.value) + Number(pointRef.value["x"] - currentXRef.value)
     );
-    // xRef.value =
-    //     Number(xRef.value) + Number(pointRef.value["x"] - currentXRef.value);
+
     console.log("currentx");
     console.log(xRef.value);
 };
